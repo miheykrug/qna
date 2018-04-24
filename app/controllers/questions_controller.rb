@@ -1,18 +1,11 @@
 class QuestionsController < ApplicationController
-  before_action :load_question, only: %i[show edit update destroy]
-
-  def index
-    @questions = Question.all
-  end
+  before_action :load_question, only: %i[show]
 
   def show
   end
 
   def new
     @question = Question.new
-  end
-
-  def edit
   end
 
   def create
@@ -23,19 +16,6 @@ class QuestionsController < ApplicationController
     else
       render :new
     end
-  end
-
-  def update
-    if @question.update(question_params)
-      redirect_to @question
-    else
-      render :edit
-    end
-  end
-
-  def destroy
-    @question.destroy
-    redirect_to questions_path
   end
 
   private
