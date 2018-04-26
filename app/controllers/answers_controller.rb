@@ -1,21 +1,15 @@
 class AnswersController < ApplicationController
+  before_action :authenticate_user!, only: %i[create]
   before_action :load_question, only: %i[new create]
-  before_action :load_answer, only: %i[show]
-
-  def show
-  end
-
-  def new
-    @answer = @question.answers.build
-  end
+  # before_action :load_answer, only: %i[show]
 
   def create
     @answer = @question.answers.build(answer_params)
 
     if @answer.save
-      redirect_to @answer
+      redirect_to @question
     else
-      render :new
+      render "questions/show"
     end
   end
 
