@@ -2,7 +2,9 @@ h1 = @question.title
 
 p = @question.body
 
+= link_to 'Delete question', question_path(@question), method: :delete, data: { confirm: 'Аre you sure?' }
+
 = render 'answers/form'
 
 h2 Answers
-= render @answers
+= render @question.answers

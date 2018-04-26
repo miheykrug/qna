@@ -1,7 +1,8 @@
 require 'rails_helper'
 
 RSpec.describe QuestionsController, type: :controller do
-  let(:question) { create(:question) }
+  let(:author) { create(:user) }
+  let(:question) { create(:question, user: author) }
 
   describe 'GET #index' do
     let(:questions) { create_list(:question, 2) }
@@ -55,10 +56,10 @@ RSpec.describe QuestionsController, type: :controller do
 
   describe 'POST #create' do
     sign_in_user
-    
+
     context 'with valid attributes' do
       it 'save the new question in database' do
-        expect { post :create, params: { question: attributes_for(:question) } }.to change(Question, :count).by(1)
+        expect { post :create, params: { user_id: author, question: attributes_for(:question) } }.to change(Question, :count).by(1)
       end
       it 'redirect to show view' do
         post :create, params: { question: attributes_for(:question) }
@@ -68,12 +69,46 @@ RSpec.describe QuestionsController, type: :controller do
 
     context 'with invalid attributes' do
       it 'does not save the question in database' do
-        expect { post :create, params: { question: attributes_for(:invalid_question) } }.to_not change(Question, :count)
+        expect { post :create, params: { user_id: author, question: attributes_for(:invalid_question) } }.to_not change(Question, :count)
       end
 
       it 're-render new view' do
         post :create, params: { question: attributes_for(:invalid_question) }
         expect(response).to render_template :new
+      end
+    end
+  end
+
+  describe 'DELETE #destroy' do
+    before { question }
+
+    context 'current user is author of question' do
+      before do
+        @request.env['devise.mapping'] = Devise.mappings[:user]
+        sign_in author
+      end
+
+
+      it 'deletes question' do
+        expect { delete :destroy, params: { id: question } }.to change(Question, :count).by(-1)
+      end
+
+      it 'redirect to index view' do
+        delete :destroy, params: { id: question }
+        expect(response).to redirect_to questions_path
+      end
+    end
+
+    context 'current user is not author of question' do
+      sign_in_user
+
+      it 'deletes question' do
+        expect { delete :destroy, params: { id: question } }.to_not change(Question, :count)
+      end
+
+      it 'redirect to show view' do
+        delete :destroy, params: { id: question }
+        expect(response).to redirect_to question_path(question)
       end
     end
   end

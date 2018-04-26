@@ -1,7 +1,7 @@
 class AnswersController < ApplicationController
-  before_action :authenticate_user!, only: %i[create]
-  before_action :load_question, only: %i[new create]
-  # before_action :load_answer, only: %i[show]
+  before_action :authenticate_user!, only: %i[create destroy]
+  before_action :load_question, only: %i[create]
+  before_action :load_answer, only: %i[destroy]
 
   def create
     @answer = @question.answers.build(answer_params)
@@ -12,6 +12,17 @@ class AnswersController < ApplicationController
       render "questions/show"
     end
   end
+
+  def destroy
+    if current_user == @answer.user
+      @answer.destroy
+      flash[:notice] = 'Answer successfully deleted.'
+    else
+      flash[:alert] = 'Only author can delete this answer!'
+    end
+    redirect_to question_path(@answer.question)
+  end
+
 
   private
 
@@ -24,7 +35,7 @@ class AnswersController < ApplicationController
   end
 
   def answer_params
-    params.require(:answer).permit(:body)
+    params.require(:answer).permit(:body).merge({ user_id: current_user.id })
   end
 
 end

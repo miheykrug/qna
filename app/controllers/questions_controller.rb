@@ -1,28 +1,39 @@
 class QuestionsController < ApplicationController
-  before_action :authenticate_user!, only: %i[new create]
-  before_action :load_question, only: %i[show]
+  before_action :authenticate_user!, only: %i[new create destroy]
+  before_action :load_question, only: %i[show destroy]
 
   def index
     @questions = Question.all
   end
 
   def show
-    @answer = @question.answers.build
     @answers = Answer.all
+    @answer = Answer.new
   end
 
   def new
-    @question = Question.new
+    @question = current_user.questions.build
   end
 
   def create
-    @question = Question.new(question_params)
+    @question = current_user.questions.build(question_params)
 
     if @question.save
       flash[:notice] = 'Your question successfully created.'
       redirect_to @question
     else
       render :new
+    end
+  end
+
+  def destroy
+    if current_user == @question.user
+      @question.destroy
+      flash[:notice] = 'Question successfully deleted.'
+      redirect_to questions_path
+    else
+      flash[:alert] = 'Only author can delete this question!'
+      redirect_to question_path(@question)
     end
   end
 
