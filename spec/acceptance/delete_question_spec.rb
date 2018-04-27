@@ -15,7 +15,12 @@ feature 'Delete question' do
   scenario 'Not author delete question' do
     sign_in(user)
     visit question_path(question)
-    click_on 'Delete question'
-    expect(page).to have_content 'Only author can delete this question!'
+    expect(page).to_not have_content 'Delete question'
   end
+
+  scenario 'Non-authenticated user delete question' do
+    visit question_path(question)
+    expect(page).to_not have_content 'Delete question'
+  end
+
 end

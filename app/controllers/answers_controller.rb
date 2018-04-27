@@ -5,7 +5,7 @@ class AnswersController < ApplicationController
 
   def create
     @answer = @question.answers.build(answer_params)
-
+    @answer.user_id = current_user.id
     if @answer.save
       redirect_to @question
     else
@@ -14,7 +14,7 @@ class AnswersController < ApplicationController
   end
 
   def destroy
-    if current_user == @answer.user
+    if current_user.author_of?(@answer)
       @answer.destroy
       flash[:notice] = 'Answer successfully deleted.'
     else
@@ -35,7 +35,7 @@ class AnswersController < ApplicationController
   end
 
   def answer_params
-    params.require(:answer).permit(:body).merge({ user_id: current_user.id })
+    params.require(:answer).permit(:body)
   end
 
 end

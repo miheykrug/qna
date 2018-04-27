@@ -1,28 +1,37 @@
 require 'rails_helper'
 
 RSpec.describe AnswersController, type: :controller do
-  let(:author) { create(:user) }
   let(:question) { create(:question) }
-  let(:answer) { create(:answer, question: question, user: author) }
 
   describe 'POST #create' do
+    let(:create!) { post :create, params: { question_id: question, answer: attributes_for(:answer) } }
     sign_in_user
 
     it 'assigns the request question to @question' do
-      post :create, params: { question_id: question, answer: attributes_for(:answer) }
+      create!
       expect(assigns(:question)).to eq question
     end
 
     context 'with valid attributes' do
       it 'save the new answer in database' do
-        expect { post :create, params: { question_id: question,
-                                         answer: attributes_for(:answer) } }.to change(question.answers, :count).by(1)
+        expect { create! }.to change(question.answers, :count).by(1)
       end
 
       it 'redirect to question index view' do
-        post :create, params: { question_id: question, answer: attributes_for(:answer) }
+        create!
         expect(response).to redirect_to question_path(question)
       end
+
+      it 'new answer has association with question' do
+        create!
+        expect(assigns(:answer).question_id).to eq question.id
+      end
+
+      it 'new answer has association with user' do
+        create!
+        expect(assigns(:answer).user_id).to eq @user.id
+      end
+
     end
 
     context 'with invalid attributes' do
@@ -40,35 +49,43 @@ RSpec.describe AnswersController, type: :controller do
   end
 
   describe 'DELETE #destroy' do
-    before { answer }
+    let(:destroy!) { delete :destroy, params: { id: some_answer } }
+    let!(:some_answer) { create(:answer, question: question) }
 
     context 'current user is author of answer' do
-      before do
-        @request.env['devise.mapping'] = Devise.mappings[:user]
-        sign_in author
-      end
-
+      @user = sign_in_user
+      let!(:user_answer) { create(:answer, question: question, user: @user) }
 
       it 'deletes answer' do
-        expect { delete :destroy, params: { id: answer } }.to change(question.answers, :count).by(-1)
+        expect { delete :destroy, params: { id: user_answer } }.to change(Answer, :count).by(-1)
       end
 
       it 'redirect to question show view' do
-        delete :destroy, params: { id: answer }
+        delete :destroy, params: { id: user_answer }
         expect(response).to redirect_to question_path(question)
       end
     end
 
     context 'current user is not author of answer' do
       sign_in_user
-
       it 'deletes answer' do
-        expect { delete :destroy, params: { id: answer } }.to_not change(question.answers, :count)
+        expect { destroy! }.to_not change(Answer, :count)
       end
 
       it 'redirect to question show view' do
-        delete :destroy, params: { id: answer }
+        destroy!
         expect(response).to redirect_to question_path(question)
+      end
+    end
+
+    context 'non-authenticated user delete question' do
+      it 'deletes answer' do
+        expect { destroy! }.to_not change(Answer, :count)
+      end
+
+      it 'redirect to new session view' do
+        destroy!
+        expect(response).to redirect_to new_user_session_path
       end
     end
   end

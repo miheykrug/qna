@@ -8,16 +8,27 @@ feature 'Create question', %q{
 
   given(:user) { create(:user) }
 
-  scenario 'Authenticated user create question' do
+  scenario 'Authenticated user create question with valid attributes' do
+    sign_in(user)
+    create_question
+
+    question = Question.last
+    expect(page).to have_content 'Your question successfully created.'
+    expect(page).to have_content question.title
+    expect(page).to have_content question.body
+  end
+
+  scenario 'Authenticated user create question with invalid attributes' do
     sign_in(user)
 
     visit questions_path
     click_on 'Asc question'
-    fill_in 'Title', with: 'Test question'
-    fill_in 'Body', with: 'text text'
+    fill_in 'Title', with: nil
+    fill_in 'Body', with: nil
     click_on 'Create'
-    expect(page).to have_content 'Your question successfully created.'
+    expect(page).to have_content '2 errors detected:'
   end
+
 
   scenario 'Non-authenticated user create question' do
     visit questions_path

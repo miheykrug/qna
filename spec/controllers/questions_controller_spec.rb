@@ -55,21 +55,28 @@ RSpec.describe QuestionsController, type: :controller do
   end
 
   describe 'POST #create' do
-    sign_in_user
+    @user = sign_in_user
+    let(:create!) { post :create, params: { question: attributes_for(:question) } }
 
     context 'with valid attributes' do
       it 'save the new question in database' do
-        expect { post :create, params: { user_id: author, question: attributes_for(:question) } }.to change(Question, :count).by(1)
+        expect { create! }.to change(Question, :count).by(1)
       end
+
       it 'redirect to show view' do
-        post :create, params: { question: attributes_for(:question) }
+        create!
         expect(response).to redirect_to question_path(assigns(:question))
+      end
+
+      it 'new question has association with user' do
+        create!
+        expect(assigns(:question).user_id).to eq @user.id
       end
     end
 
     context 'with invalid attributes' do
       it 'does not save the question in database' do
-        expect { post :create, params: { user_id: author, question: attributes_for(:invalid_question) } }.to_not change(Question, :count)
+        expect { post :create, params: { question: attributes_for(:invalid_question) } }.to_not change(Question, :count)
       end
 
       it 're-render new view' do
@@ -80,21 +87,19 @@ RSpec.describe QuestionsController, type: :controller do
   end
 
   describe 'DELETE #destroy' do
+    let(:destroy!) { delete :destroy, params: { id: question } }
     before { question }
 
     context 'current user is author of question' do
-      before do
-        @request.env['devise.mapping'] = Devise.mappings[:user]
-        sign_in author
-      end
-
+      @user = sign_in_user
+      let!(:user_question) { create(:question, user: @user) }
 
       it 'deletes question' do
-        expect { delete :destroy, params: { id: question } }.to change(Question, :count).by(-1)
+        expect { delete :destroy, params: { id: user_question } }.to change(Question, :count).by(-1)
       end
 
       it 'redirect to index view' do
-        delete :destroy, params: { id: question }
+        delete :destroy, params: { id: user_question }
         expect(response).to redirect_to questions_path
       end
     end
@@ -103,12 +108,23 @@ RSpec.describe QuestionsController, type: :controller do
       sign_in_user
 
       it 'deletes question' do
-        expect { delete :destroy, params: { id: question } }.to_not change(Question, :count)
+        expect { destroy! }.to_not change(Question, :count)
       end
 
       it 'redirect to show view' do
-        delete :destroy, params: { id: question }
+        destroy!
         expect(response).to redirect_to question_path(question)
+      end
+    end
+
+    context 'Non-authenticated user delete question' do
+      it 'deletes question' do
+        expect { destroy! }.to_not change(Question, :count)
+      end
+
+      it 'redirect to new session view' do
+        destroy!
+        expect(response).to redirect_to new_user_session_path
       end
     end
   end

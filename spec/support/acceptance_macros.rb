@@ -3,7 +3,15 @@ module AcceptanceMacros
     visit new_user_session_path
     fill_in 'Email', with: user.email
     fill_in 'Password', with: user.password
-    click_on 'Log in'
+    click_button 'Log in'
+  end
+
+  def create_question
+    visit questions_path
+    click_on 'Asc question'
+    fill_in 'Title', with: 'Test question'
+    fill_in 'Body', with: 'Question body'
+    click_on 'Create'
   end
 
   def create_answer(question)

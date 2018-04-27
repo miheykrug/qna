@@ -7,4 +7,8 @@ class User < ApplicationRecord
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :trackable, :validatable
   validates :email, :password, presence: true
+
+  def author_of?(publication)
+    id == publication.user_id
+  end
 end
