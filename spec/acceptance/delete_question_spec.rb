@@ -10,6 +10,7 @@ feature 'Delete question' do
     visit question_path(question)
     click_on 'Delete question'
     expect(page).to have_content 'Question successfully deleted.'
+    expect(page).to_not have_content question.body
   end
 
   scenario 'Not author delete question' do

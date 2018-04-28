@@ -8,7 +8,7 @@ module AcceptanceMacros
 
   def create_question
     visit questions_path
-    click_on 'Asc question'
+    click_on 'Ask question'
     fill_in 'Title', with: 'Test question'
     fill_in 'Body', with: 'Question body'
     click_on 'Create'

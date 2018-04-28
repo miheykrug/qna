@@ -22,17 +22,18 @@ feature 'Create question', %q{
     sign_in(user)
 
     visit questions_path
-    click_on 'Asc question'
+    click_on 'Ask question'
     fill_in 'Title', with: nil
     fill_in 'Body', with: nil
     click_on 'Create'
-    expect(page).to have_content '2 errors detected:'
+    expect(page).to have_content "Title can't be blank"
+    expect(page).to have_content "Body can't be blank"
   end
 
 
   scenario 'Non-authenticated user create question' do
     visit questions_path
-    click_on 'Asc question'
+    click_on 'Ask question'
 
     # save_and_open_page
     expect(page).to have_content 'You need to sign in or sign up before continuing.'

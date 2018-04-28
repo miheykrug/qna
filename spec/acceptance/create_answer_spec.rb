@@ -19,7 +19,7 @@ feature 'Create answer', %q{
     visit question_path(question)
     fill_in 'Body', with: nil
     click_on 'Give answer'
-    expect(page).to have_content '1 errors detected:'
+    expect(page).to have_content "Body can't be blank"
   end
 
 
