@@ -7,14 +7,17 @@ feature 'Create answer', %q{
 } do
   given(:user) { create(:user) }
   given(:question) { create(:question) }
-  scenario 'Authenticated user create answer with valid attributes' do
+  scenario 'Authenticated user create answer with valid attributes', js: true do
     sign_in(user)
 
     create_answer(question)
-    expect(page).to have_content 'My Answer'
+    expect(current_path).to eq question_path(question)
+    within '.answers' do
+      expect(page).to have_content 'My Answer'
+    end
   end
 
-  scenario 'Authenticated user create answer with invalid attributes' do
+  scenario 'Authenticated user create answer with invalid attributes', js: true do
     sign_in(user)
     visit question_path(question)
     fill_in 'Body', with: nil

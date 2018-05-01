@@ -4,7 +4,8 @@ RSpec.describe AnswersController, type: :controller do
   let(:question) { create(:question) }
 
   describe 'POST #create' do
-    let(:create!) { post :create, params: { question_id: question, answer: attributes_for(:answer) } }
+    let(:create!) { post :create, params: { question_id: question,
+                                            answer: attributes_for(:answer), format: :js } }
     sign_in_user
 
     it 'assigns the request question to @question' do
@@ -17,9 +18,9 @@ RSpec.describe AnswersController, type: :controller do
         expect { create! }.to change(question.answers, :count).by(1)
       end
 
-      it 'redirect to question index view' do
+      it 'render create template' do
         create!
-        expect(response).to redirect_to question_path(question)
+        expect(response).to render_template :create
       end
 
       it 'new answer has association with question' do
@@ -37,13 +38,14 @@ RSpec.describe AnswersController, type: :controller do
     context 'with invalid attributes' do
       it 'does not save the answer in database' do
         expect { post :create, params: { question_id: question,
-                                         answer: attributes_for(:invalid_answer) } }.to_not change(Answer, :count)
+                                         answer: attributes_for(:invalid_answer),
+                                         format: :js } }.to_not change(Answer, :count)
       end
 
-      it 're-render new view' do
+      it 'render create template' do
         post :create, params: { question_id: question,
-                                answer: attributes_for(:invalid_answer) }
-        expect(response).to render_template "questions/show"
+                                answer: attributes_for(:invalid_answer), format: :js }
+        expect(response).to render_template :create
       end
     end
   end
