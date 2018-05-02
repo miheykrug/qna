@@ -6,15 +6,7 @@ class AnswersController < ApplicationController
   def create
     @answer = @question.answers.build(answer_params)
     @answer.user = current_user
-    respond_to do |format|
-      if @answer.save
-        format.js
-        format.html { redirect_to @question }
-      else
-        format.js
-        format.html { render 'questions/show' }
-      end
-    end
+    @answer.save
   end
 
   def destroy
