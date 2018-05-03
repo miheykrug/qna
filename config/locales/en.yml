@@ -37,3 +37,6 @@ en:
       answer:
         create: "Give answer"
         update: "Save"
+      question:
+        create: "Create"
+        update: "Save"

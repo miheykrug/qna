@@ -53,20 +53,6 @@ RSpec.describe AnswersController, type: :controller do
   describe 'PATCH #update' do
     let(:answer) { create(:answer) }
 
-    describe 'common behavior' do
-      sign_in_user
-
-      it 'assigns the request answer to @answer' do
-        patch :update, params: { id: answer, answer: attributes_for(:answer), format: :js }
-        expect(assigns(:answer)).to eq answer
-      end
-
-      it 'render update template' do
-        patch :update, params: { id: answer, answer: { body: 'new body'}, format: :js }
-        expect(response).to render_template :update
-      end
-    end
-
     context 'current user is author of answer' do
       @user = sign_in_user
       let!(:user_answer) { create(:answer, question: question, user: @user) }
@@ -75,6 +61,16 @@ RSpec.describe AnswersController, type: :controller do
         patch :update, params: { id: user_answer, answer: { body: 'new body'}, format: :js }
         user_answer.reload
         expect(user_answer.body).to eq 'new body'
+      end
+
+      it 'assigns the request answer to @answer' do
+        patch :update, params: { id: user_answer, answer: attributes_for(:answer), format: :js }
+        expect(assigns(:answer)).to eq user_answer
+      end
+
+      it 'render update template' do
+        patch :update, params: { id: user_answer, answer: attributes_for(:answer), format: :js }
+        expect(response).to render_template :update
       end
     end
 
@@ -88,7 +84,7 @@ RSpec.describe AnswersController, type: :controller do
       end
     end
 
-    context 'non-authenticated user edit question' do
+    context 'non-authenticated user edit answer' do
       it 'change answer attributes' do
         patch :update, params: { id: answer, answer: { body: 'new body'}, format: :js }
         answer.reload
