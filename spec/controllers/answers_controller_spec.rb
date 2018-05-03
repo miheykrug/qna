@@ -50,6 +50,28 @@ RSpec.describe AnswersController, type: :controller do
     end
   end
 
+  describe 'PATCH #update' do
+    let(:answer) { create(:answer) }
+
+    it 'assigns the request answer to @answer' do
+      patch :update, params: { id: answer, answer: attributes_for(:answer), format: :js }
+      expect(assigns(:answer)).to eq answer
+    end
+
+    it 'change answer attributes' do
+      patch :update, params: { id: answer, answer: { body: 'new body'}, format: :js }
+      answer.reload
+      expect(answer.body).to eq 'new body'
+    end
+
+    it 'render update template' do
+      patch :update, params: { id: answer, answer: { body: 'new body'}, format: :js }
+      expect(response).to render_template :update
+    end
+
+  end
+
+
   describe 'DELETE #destroy' do
     let(:destroy!) { delete :destroy, params: { id: some_answer } }
     let!(:some_answer) { create(:answer, question: question) }

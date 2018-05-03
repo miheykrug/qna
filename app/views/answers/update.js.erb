@@ -1,0 +1,12 @@
+<% if @answer.errors.present? %>
+  $('.errors').html('<%= j render 'shared/errors', resource: @answer %>')
+<% else %>
+  $('.errors').html('')
+  $('.answers').html('<%= j render @answer.question.answers %>')
+  $('.edit-answer-link').click(function (e) {
+    e.preventDefault()
+    $(this).hide();
+    answerId = $(this).data('answerId')
+    $('form#edit-answer-' + answerId).show()
+  })
+<% end %>

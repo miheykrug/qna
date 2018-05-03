@@ -1,4 +1,4 @@
-require 'rails_helper'
+require_relative 'acceptance_helper'
 
 feature 'View the questions list' do
   given!(:questions) {create_list(:question, 3)}
