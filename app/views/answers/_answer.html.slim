@@ -7,7 +7,7 @@ p
                   data: { confirm: 'Аre you sure?' }
       p
         =form_with model: answer, class: 'edit_answer', html: { id: "edit-answer-#{answer.id}" } do |f|
-          .errors
+          .answer-errors
             = render 'shared/errors', resource: answer
           = f.label :body
           = f.text_area :body

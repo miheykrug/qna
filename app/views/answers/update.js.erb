@@ -1,5 +1,6 @@
 <% if @answer.errors.present? %>
-  $('.errors').html('<%= j render 'shared/errors', resource: @answer %>')
+  $('.answer-errors').html('<%= j render 'shared/errors', resource: @answer %>')
 <% else %>
+  $('.answer-errors').html('')
   $('.answers').html('<%= j render @answer.question.answers %>')
 <% end %>

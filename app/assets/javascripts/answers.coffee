@@ -2,13 +2,14 @@
 # All this logic will automatically be available in application.js.
 # You can use CoffeeScript in this file: http://coffeescript.org/
 
-ready = ->
-  $('.edit-answer-link').click (e) ->
+editAnswerListener = ->
+  editAnswer = (e) ->
     e.preventDefault();
     $(this).hide();
     answer_id = $(this).data('answerId')
     $('form#edit-answer-' + answer_id).show()
 
+  $('.edit-answer-link').click editAnswer
 
-$(document).ready(ready) # "вешаем" функцию ready на событие document.ready
-$(document).on('turbolinks:load', ready)  # "вешаем" функцию ready на событие turbolinks:load
+$(document).ready(editAnswerListener) # "вешаем" функцию ready на событие document.ready
+$(document).on('turbolinks:load', editAnswerListener)  # "вешаем" функцию ready на событие turbolinks:load

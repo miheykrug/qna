@@ -23,18 +23,36 @@ feature 'Question edit', %q{
       expect(page).to have_link 'Edit'
     end
 
-    scenario 'try to edit his question' do
-      sign_in author
-      visit question_path(question)
+    describe 'try to edit his question' do
+      before do
+        sign_in author
+        visit question_path(question)
+      end
+      scenario 'with valid attributes', js: true do
+        within('.question') do
+          click_on 'Edit'
+          fill_in 'Title', with: 'edited title'
+          fill_in 'Body', with: 'edited question'
+          click_on 'Save'
+        end
+        expect(page).to_not have_content question.title
+        expect(page).to_not have_content question.body
+        expect(page).to have_content 'edited title'
+        expect(page).to have_content 'edited question'
+      end
 
-      click_on 'Edit'
-      fill_in 'Title', with: 'edited title'
-      fill_in 'Body', with: 'edited question'
-      click_on 'Save'
-      expect(page).to_not have_content question.title
-      expect(page).to_not have_content question.body
-      expect(page).to have_content 'edited title'
-      expect(page).to have_content 'edited question'
+      scenario 'with invalid attributes', js: true do
+
+        within('.question') do
+          click_on 'Edit'
+          fill_in 'Title', with: nil
+          fill_in 'Body', with: nil
+          click_on 'Save'
+        end
+        expect(page).to have_content "Title can't be blank"
+        expect(page).to have_content "Body can't be blank"
+      end
+
     end
 
     scenario "try to edit other user's question" do
