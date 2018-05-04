@@ -9,8 +9,10 @@ h1.question-title = @question.title
     =<> link_to 'Delete question', question_path(@question), method: :delete,
               data: { confirm: 'Аre you sure?' }
 
-= render 'answers/form'
-
 h2 Answers
 .answers
   = render @question.answers
+
+h2 New answer
+.answer-form
+  = render 'answers/form'

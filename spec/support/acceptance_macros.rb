@@ -16,8 +16,10 @@ module AcceptanceMacros
 
   def create_answer(question)
     visit question_path(question)
-    fill_in 'Body', with: 'My Answer'
-    click_on 'Give answer'
+    within('.answer-form') do
+      fill_in 'Body', with: 'My Answer'
+      click_on 'Give answer'
+    end
   end
 
   def sign_up(user)

@@ -95,7 +95,7 @@ RSpec.describe AnswersController, type: :controller do
 
 
   describe 'DELETE #destroy' do
-    let(:destroy!) { delete :destroy, params: { id: some_answer } }
+    let(:destroy!) { delete :destroy, params: { id: some_answer }, format: :js }
     let!(:some_answer) { create(:answer, question: question) }
 
     context 'current user is author of answer' do
@@ -103,12 +103,7 @@ RSpec.describe AnswersController, type: :controller do
       let!(:user_answer) { create(:answer, question: question, user: @user) }
 
       it 'deletes answer' do
-        expect { delete :destroy, params: { id: user_answer } }.to change(Answer, :count).by(-1)
-      end
-
-      it 'redirect to question show view' do
-        delete :destroy, params: { id: user_answer }
-        expect(response).to redirect_to question_path(question)
+        expect { delete :destroy, params: { id: user_answer }, format: :js }.to change(Answer, :count).by(-1)
       end
     end
 
@@ -116,11 +111,6 @@ RSpec.describe AnswersController, type: :controller do
       sign_in_user
       it 'deletes answer' do
         expect { destroy! }.to_not change(Answer, :count)
-      end
-
-      it 'redirect to question show view' do
-        destroy!
-        expect(response).to redirect_to question_path(question)
       end
     end
 
@@ -130,7 +120,7 @@ RSpec.describe AnswersController, type: :controller do
       end
 
       it 'redirect to new session view' do
-        destroy!
+        delete :destroy, params: { id: some_answer }
         expect(response).to redirect_to new_user_session_path
       end
     end

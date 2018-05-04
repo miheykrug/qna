@@ -6,11 +6,11 @@ feature 'Delete answer' do
   given!(:question) { create(:question) }
   given!(:answer) { create(:answer, question: question, user: author) }
 
-  scenario 'Author delete answer' do
+  scenario 'Author delete answer', js: true do
     sign_in(author)
     visit question_path(question)
     click_on 'Delete answer'
-    expect(page).to have_content 'Answer successfully deleted.'
+    page.driver.browser.switch_to.alert.accept
     expect(page).to_not have_content answer.body
   end
 

@@ -20,8 +20,10 @@ feature 'Create answer', %q{
   scenario 'Authenticated user create answer with invalid attributes', js: true do
     sign_in(user)
     visit question_path(question)
-    fill_in 'Body', with: nil
-    click_on 'Give answer'
+    within('.answer-form') do
+      fill_in 'Body', with: nil
+      click_on 'Give answer'
+    end
     expect(page).to have_content "Body can't be blank"
   end
 
