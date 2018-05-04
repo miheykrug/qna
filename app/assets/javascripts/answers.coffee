@@ -9,7 +9,7 @@ editAnswerListener = ->
     answer_id = $(this).data('answerId')
     $('form#edit-answer-' + answer_id).show()
 
-  $('.edit-answer-link').click editAnswer
+  $('.answers').on 'click', '.edit-answer-link', editAnswer
 
 $(document).ready(editAnswerListener) # "вешаем" функцию ready на событие document.ready
 $(document).on('turbolinks:load', editAnswerListener)  # "вешаем" функцию ready на событие turbolinks:load
