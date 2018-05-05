@@ -125,4 +125,54 @@ RSpec.describe AnswersController, type: :controller do
       end
     end
   end
+
+  describe 'PATCH #best' do
+    let(:answer) { create(:answer, question: question) }
+
+    context 'current user is author of answer question' do
+      @user = sign_in_user
+      let(:user_question) { create(:question, user: @user) }
+      let(:user_question_answer) { create(:answer, question: user_question) }
+
+      it 'assigns the request answer to @answer' do
+        patch :best, params: { id: user_question_answer, format: :js }
+        expect(assigns(:answer)).to eq user_question_answer
+      end
+
+      it 'assigns the request question to @question' do
+        patch :best, params: { id: user_question_answer, format: :js }
+        expect(assigns(:question)).to eq user_question
+      end
+
+      it 'set best answer of question' do
+        patch :best, params: { id: user_question_answer, format: :js }
+        user_question.reload
+        expect(user_question.answer).to eq user_question_answer
+      end
+
+      it 'render best template' do
+        patch :best, params: { id: user_question_answer, format: :js }
+        expect(response).to render_template :best
+      end
+    end
+
+    context 'current user is not author of answer question' do
+      sign_in_user
+
+      it 'set best answer of question' do
+
+        patch :best, params: { id: answer, format: :js }
+        question.reload
+        expect(question.answer).to be_nil
+      end
+    end
+
+    context 'non-authenticated user' do
+      it 'set best answer of question' do
+        patch :best, params: { id: answer, format: :js }
+        question.reload
+        expect(question.answer).to be_nil
+      end
+    end
+  end
 end

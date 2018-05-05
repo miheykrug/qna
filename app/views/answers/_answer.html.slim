@@ -1,10 +1,13 @@
-= content_tag :div, class: "answer-#{answer.id}" do
+= content_tag :div, id: "answer-#{answer.id}", class: best_answer_class(answer) do
   - if answer.persisted?
     = answer.body
     - if current_user&.author_of?(answer)
       =<> link_to 'Edit', '', class: 'edit-answer-link', data: { answer_id: answer.id }
       =<> link_to 'Delete answer', answer_path(answer), method: :delete, remote: true,
                   data: { confirm: 'Аre you sure?' }
+    - if current_user&.author_of?(answer.question)
+      =<> link_to 'Best', best_answer_path(answer), method: :put, remote: true
+    - if current_user&.author_of?(answer)
       p
         =form_with model: answer, class: 'edit_answer', html: { id: "edit-answer-#{answer.id}" } do |f|
           .edit-answer-errors

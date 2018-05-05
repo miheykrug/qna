@@ -1,0 +1,3 @@
+$('.answers').children().removeClass('best-answer')
+$('#answer-<%= @answer.id %>').addClass('best-answer')
+$('.answers').prepend($('.best-answer'))

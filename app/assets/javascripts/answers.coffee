@@ -11,5 +11,12 @@ editAnswerListener = ->
 
   $('.answers').on 'click', '.edit-answer-link', editAnswer
 
-$(document).ready(editAnswerListener) # "вешаем" функцию ready на событие document.ready
-$(document).on('turbolinks:load', editAnswerListener)  # "вешаем" функцию ready на событие turbolinks:load
+bestAnswerTop = ->
+  $('.answers').prepend($('.best-answer'))
+
+$(document).ready(editAnswerListener)
+$(document).on('turbolinks:load', editAnswerListener)
+
+$(document).ready(bestAnswerTop)
+$(document).on('turbolinks:load', bestAnswerTop)
+

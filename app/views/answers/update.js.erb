@@ -2,5 +2,5 @@
   $('.edit-answer-errors').html('<%= j render 'shared/errors', resource: @answer %>')
 <% else %>
   $('.edit-answer-errors').html('')
-  $('.answer-<%= @answer.id %>').html('<%= j render @answer %>')
+  $('#answer-<%= @answer.id %>').html('<%= j render @answer %>')
 <% end %>
