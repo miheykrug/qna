@@ -132,26 +132,29 @@ RSpec.describe AnswersController, type: :controller do
     context 'current user is author of answer question' do
       @user = sign_in_user
       let(:user_question) { create(:question, user: @user) }
-      let(:user_question_answer) { create(:answer, question: user_question) }
+      let!(:old_best_answer) { create(:answer, question: user_question, best: true) }
+      let(:new_best_answer) { create(:answer, question: user_question) }
 
       it 'assigns the request answer to @answer' do
-        patch :best, params: { id: user_question_answer, format: :js }
-        expect(assigns(:answer)).to eq user_question_answer
+        patch :best, params: { id: new_best_answer, format: :js }
+        expect(assigns(:answer)).to eq new_best_answer
       end
 
       it 'assigns the request question to @question' do
-        patch :best, params: { id: user_question_answer, format: :js }
+        patch :best, params: { id: new_best_answer, format: :js }
         expect(assigns(:question)).to eq user_question
       end
 
       it 'set best answer of question' do
-        patch :best, params: { id: user_question_answer, format: :js }
-        user_question.reload
-        expect(user_question.answer).to eq user_question_answer
+        patch :best, params: { id: new_best_answer, format: :js }
+        new_best_answer.reload
+        old_best_answer.reload
+        expect(new_best_answer.best).to be true
+        expect(old_best_answer.best).to be false
       end
 
       it 'render best template' do
-        patch :best, params: { id: user_question_answer, format: :js }
+        patch :best, params: { id: new_best_answer, format: :js }
         expect(response).to render_template :best
       end
     end
@@ -162,16 +165,16 @@ RSpec.describe AnswersController, type: :controller do
       it 'set best answer of question' do
 
         patch :best, params: { id: answer, format: :js }
-        question.reload
-        expect(question.answer).to be_nil
+        answer.reload
+        expect(answer.best).to be false
       end
     end
 
     context 'non-authenticated user' do
       it 'set best answer of question' do
         patch :best, params: { id: answer, format: :js }
-        question.reload
-        expect(question.answer).to be_nil
+        answer.reload
+        expect(answer.best).to be false
       end
     end
   end
