@@ -1,6 +1,11 @@
 = content_tag :div, id: "answer-#{answer.id}", class: best_answer_class(answer) do
   - if answer.persisted?
-    = answer.body
+    p = answer.body
+    p Answer attachments:
+    ul
+      - answer.attachments.each do |a|
+        li = link_to a.file.filename, a.file.url
+
     - if current_user&.author_of?(answer)
       =<> link_to 'Edit', '', class: 'edit-answer-link', data: { answer_id: answer.id }
       =<> link_to 'Delete answer', answer_path(answer), method: :delete, remote: true,
