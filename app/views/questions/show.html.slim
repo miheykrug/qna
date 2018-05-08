@@ -4,7 +4,7 @@ h1.question-title = @question.title
   p Attachments:
   ul
     - @question.attachments.each do |a|
-      li id="question-attachment-#{a.id}"
+      li id="attachment-#{a.id}"
         => link_to a.file.filename, a.file.url
         ||
         - if current_user&.author_of?(@question)
