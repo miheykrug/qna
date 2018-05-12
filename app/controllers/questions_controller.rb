@@ -1,6 +1,6 @@
 class QuestionsController < ApplicationController
-  before_action :authenticate_user!, only: %i[new create edit update destroy]
-  before_action :load_question, only: %i[show edit update destroy]
+  before_action :authenticate_user!, only: %i[new create edit update destroy rating_up rating_down]
+  before_action :load_question, only: %i[show edit update destroy rating_up rating_down]
 
   def index
     @questions = Question.all
@@ -40,6 +40,22 @@ class QuestionsController < ApplicationController
     else
       flash[:alert] = 'Only author can delete this question!'
       redirect_to question_path(@question)
+    end
+  end
+
+  def rating_up
+    unless current_user.author_of?(@question)
+      vote = @question.votes.build(rating: 1)
+      vote.user = current_user
+      vote.save
+    end
+  end
+
+  def rating_down
+    unless current_user.author_of?(@question)
+      vote = @question.votes.build(rating: -1)
+      vote.user = current_user
+      vote.save
     end
   end
 

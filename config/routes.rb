@@ -9,6 +9,10 @@ Rails.application.routes.draw do
         put :best
       end
     end
+    member do
+      post :rating_up
+      post :rating_down
+    end
   end
   resources :attachments, only: %i[destroy]
 end

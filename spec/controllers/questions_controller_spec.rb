@@ -202,4 +202,69 @@ RSpec.describe QuestionsController, type: :controller do
       end
     end
   end
+
+  describe 'POST #rating_up' do
+
+    context 'current user is not author of question' do
+      sign_in_user
+      it 'assigns the requested question to @question' do
+        post :rating_up, params: { id: question }
+        expect(assigns(:question)).to eq question
+      end
+      it 'create new vote' do
+        expect { post :rating_up, params: { id: question } }.to change(question.votes, :count).by(1)
+      end
+
+      it 'create two votes from one question' do
+        post :rating_down, params: { id: question }
+        expect { post :rating_down, params: { id: question } }.to_not change(Vote, :count)
+      end
+    end
+
+    context 'current user is author of question' do
+      @user = sign_in_user
+      let!(:user_question) { create(:question, user: @user) }
+      it 'try to save new vote' do
+        expect { post :rating_up, params: { id: user_question } }.to_not change(Vote, :count)
+      end
+    end
+
+    context 'Non-authenticated user delete question' do
+      it 'try to save new vote' do
+        expect { post :rating_up, params: { id: question } }.to_not change(Vote, :count)
+      end
+    end
+  end
+
+  describe 'POST #rating_down' do
+    context 'current user is not author of question' do
+      sign_in_user
+      it 'assigns the requested question to @question' do
+        post :rating_down, params: { id: question }
+        expect(assigns(:question)).to eq question
+      end
+      it 'create new vote' do
+        expect { post :rating_down, params: { id: question } }.to change(question.votes, :count).by(1)
+      end
+
+      it 'create two votes from one question' do
+        post :rating_down, params: { id: question }
+        expect { post :rating_down, params: { id: question } }.to_not change(Vote, :count)
+      end
+    end
+
+    context 'current user is author of question' do
+      @user = sign_in_user
+      let!(:user_question) { create(:question, user: @user) }
+      it 'try to save new vote' do
+        expect { post :rating_down, params: { id: user_question } }.to_not change(Vote, :count)
+      end
+    end
+
+    context 'Non-authenticated user delete question' do
+      it 'try to save new vote' do
+        expect { post :rating_down, params: { id: question } }.to_not change(Vote, :count)
+      end
+    end
+  end
 end

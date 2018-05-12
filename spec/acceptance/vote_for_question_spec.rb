@@ -20,7 +20,15 @@ feature 'Vote for the question', %q{
       expect(page).to have_content '1'
     end
   end
-  scenario 'Authenticated user try to vote for the question two times'
+
+  scenario 'Authenticated user try to vote for the question two times' do
+    within('.question') do
+      click_on '+'
+      click_on '+'
+      save_and_open_page
+      expect(page).to have_content '1'
+    end
+  end
   scenario 'Authenticated user try to cancel his vote'
   scenario 'Authenticated user try to vote again after canceling'
   scenario 'Author of question try to vote for his question'

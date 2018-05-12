@@ -32,7 +32,10 @@ h1.question-title = @question.title
     =<> link_to 'Edit', '', class: 'edit-question-link'
     =<> link_to 'Delete question', question_path(@question), method: :delete,
               data: { confirm: 'Аre you sure?' }
-
+  .vote
+    =<> link_to '+', rating_up_question_path(@question), method: :post
+    =<> @question.votes.pluck(:rating).sum
+    =<> link_to '-', rating_down_question_path(@question), method: :post
 h2 Answers
 .answers
   = render @answers
