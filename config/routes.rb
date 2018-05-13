@@ -12,6 +12,7 @@ Rails.application.routes.draw do
     member do
       post :rating_up
       post :rating_down
+      delete :rating_cancel
     end
   end
   resources :attachments, only: %i[destroy]

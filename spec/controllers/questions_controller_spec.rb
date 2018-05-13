@@ -267,4 +267,35 @@ RSpec.describe QuestionsController, type: :controller do
       end
     end
   end
+
+  describe 'DELETE #rating_cancel' do
+
+    context 'current user cancel his vote' do
+      @user = sign_in_user
+      let!(:vote) { create(:vote, votable: question, user: @user) }
+
+      it 'assigns the requested question to @question' do
+        delete :rating_cancel, params: { id: question }
+        expect(assigns(:question)).to eq question
+      end
+      it 'delete vote' do
+        expect { delete :rating_cancel, params: { id: question } }.to change(question.votes, :count).by(-1)
+      end
+    end
+
+    context 'current user' do
+      let(:other_user) { create(:user) }
+      let!(:other_vote) { create(:vote, votable: question, user: other_user) }
+
+      it 'try to cancel vote of other user' do
+        expect { delete :rating_cancel, params: { id: question } }.to_not change(Vote, :count)
+      end
+    end
+
+    context 'Non-authenticated user' do
+      it 'try to cancel vote' do
+        expect { delete :rating_cancel, params: { id: question } }.to_not change(Vote, :count)
+      end
+    end
+  end
 end

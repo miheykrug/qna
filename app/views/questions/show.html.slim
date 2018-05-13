@@ -33,9 +33,12 @@ h1.question-title = @question.title
     =<> link_to 'Delete question', question_path(@question), method: :delete,
               data: { confirm: 'Аre you sure?' }
   .vote
-    =<> link_to '+', rating_up_question_path(@question), method: :post
+    - unless current_user&.author_of?(@question)
+      =<> link_to '+', rating_up_question_path(@question), method: :post
     =<> @question.votes.pluck(:rating).sum
-    =<> link_to '-', rating_down_question_path(@question), method: :post
+    - unless current_user&.author_of?(@question)
+      =<> link_to '-', rating_down_question_path(@question), method: :post
+      =<> link_to 'cancel vote', rating_cancel_question_path(@question), method: :delete
 h2 Answers
 .answers
   = render @answers
