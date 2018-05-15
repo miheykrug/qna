@@ -3,16 +3,18 @@ Rails.application.routes.draw do
   devise_for :users
   root to: "questions#index"
 
-  resources :questions do
-    resources :answers, only: %i[create update destroy], shallow: true do
-      member do
-        put :best
-      end
-    end
+  concern :votable do
     member do
       post :rating_up
       post :rating_down
       delete :rating_cancel
+    end
+  end
+  resources :questions, concerns: [:votable] do
+    resources :answers, only: %i[create update destroy], shallow: true do
+      member do
+        put :best
+      end
     end
   end
   resources :attachments, only: %i[destroy]

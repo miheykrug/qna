@@ -38,6 +38,7 @@ h1.question-title = @question.title
     =<> @question.votes.pluck(:rating).sum
     - unless current_user&.author_of?(@question)
       =<> link_to '-', rating_down_question_path(@question), method: :post
+    - if @vote && current_user&.author_of?(@vote)
       =<> link_to 'cancel vote', rating_cancel_question_path(@question), method: :delete
 h2 Answers
 .answers

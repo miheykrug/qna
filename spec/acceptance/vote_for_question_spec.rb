@@ -15,41 +15,34 @@ feature 'Vote for the question', %q{
     visit question_path(question)
   end
 
-  scenario 'Authenticated user try to vote for the question' do
+  scenario 'Authenticated user try to vote for the question', js: true do
     within('.question .vote') do
       click_on '+'
-    end
-
-    within('.question .vote') do
       expect(page).to have_content '1'
+      expect(page).to have_content 'cancel vote'
     end
   end
 
-  scenario 'Authenticated user try to vote for the question two times' do
+  scenario 'Authenticated user try to vote for the question two times', js: true do
     within('.question .vote') do
       click_on '+'
       click_on '+'
-    end
-    within('.question .vote') do
       expect(page).to have_content '1'
     end
   end
-  scenario 'Authenticated user try to cancel his vote' do
+  scenario 'Authenticated user try to cancel his vote', js: true do
     within('.question .vote') do
       click_on '+'
       click_on 'cancel vote'
-    end
-    within('.question .vote') do
       expect(page).to have_content '0'
+      expect(page).to_not have_content 'cancel vote'
     end
   end
-  scenario 'Authenticated user try to vote again after canceling' do
+  scenario 'Authenticated user try to vote again after canceling', js: true do
     within('.question .vote') do
       click_on '+'
       click_on 'cancel vote'
       click_on '-'
-    end
-    within('.question .vote') do
       expect(page).to have_content '-1'
     end
 
