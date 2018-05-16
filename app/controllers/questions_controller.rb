@@ -12,7 +12,6 @@ class QuestionsController < ApplicationController
     @answers = @question.answers
     @answer = Answer.new
     @answer.attachments.build
-    @vote = @question.votes.find_by(user_id: current_user)
   end
 
   def new
@@ -45,30 +44,6 @@ class QuestionsController < ApplicationController
       redirect_to question_path(@question)
     end
   end
-
-  # def rating_up
-  #   unless current_user.author_of?(@question)
-  #     @vote = @question.votes.build(rating: 1)
-  #     @vote.user = current_user
-  #     @vote.save
-  #     redirect_to question_path(@question)
-  #   end
-  # end
-  #
-  # def rating_down
-  #   unless current_user.author_of?(@question)
-  #     @vote = @question.votes.build(rating: -1)
-  #     @vote.user = current_user
-  #     @vote.save
-  #     redirect_to question_path(@question)
-  #   end
-  # end
-  #
-  # def rating_cancel
-  #   @vote = @question.votes.find_by(user_id: current_user)
-  #   @vote.destroy if @vote
-  #   redirect_to question_path(@question)
-  # end
 
   private
 

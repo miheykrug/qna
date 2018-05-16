@@ -32,14 +32,7 @@ h1.question-title = @question.title
     =<> link_to 'Edit', '', class: 'edit-question-link'
     =<> link_to 'Delete question', question_path(@question), method: :delete,
               data: { confirm: 'Аre you sure?' }
-  .vote
-    - unless current_user&.author_of?(@question)
-      =<> link_to '+', rating_up_question_path(@question), method: :post
-    =<> @question.votes.pluck(:rating).sum
-    - unless current_user&.author_of?(@question)
-      =<> link_to '-', rating_down_question_path(@question), method: :post
-    - if @vote && current_user&.author_of?(@vote)
-      =<> link_to 'cancel vote', rating_cancel_question_path(@question), method: :delete
+  = render 'shared/vote', resource: @question
 h2 Answers
 .answers
   = render @answers

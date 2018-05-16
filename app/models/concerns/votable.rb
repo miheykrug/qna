@@ -16,4 +16,12 @@ module Votable
     vote.user = user
     vote.save
   end
+
+  def vote_of?(user)
+    votes.exists?(user: user)
+  end
+
+  def rating_sum
+    votes.pluck(:rating).sum
+  end
 end
