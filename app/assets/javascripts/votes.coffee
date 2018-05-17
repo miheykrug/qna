@@ -11,7 +11,4 @@ voteListener = ->
     $(voteContainerClass + ' .rating').html(data.rating)
     $(voteContainerClass + ' .cancel-link').addClass('hide-cancel-link')
 
-
-
-$(document).ready(voteListener)
 $(document).on('turbolinks:load', voteListener)

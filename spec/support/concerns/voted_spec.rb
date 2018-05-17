@@ -30,7 +30,7 @@ RSpec.shared_examples 'voted resource' do
       end
     end
 
-    context 'Non-authenticated user delete resource' do
+    context 'Non-authenticated user' do
       it 'try to save new vote' do
         expect { post :rating_up, params: { id: votable } }.to_not change(Vote, :count)
       end

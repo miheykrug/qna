@@ -9,5 +9,4 @@ editQuestionListener = ->
 
   $('.edit-question-link').click editQuestion
 
-$(document).ready(editQuestionListener) # "вешаем" функцию ready на событие document.ready
 $(document).on('turbolinks:load', editQuestionListener)  # "вешаем" функцию ready на событие turbolinks:load

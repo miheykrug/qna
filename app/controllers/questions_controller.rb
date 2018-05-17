@@ -1,7 +1,8 @@
 class QuestionsController < ApplicationController
   include Voted
 
-  before_action :authenticate_user!, only: %i[new create edit update destroy rating_up rating_down]
+  before_action :authenticate_user!, only: %i[new create edit update destroy
+                                              rating_up rating_down rating_cancel]
   before_action :load_question, only: %i[show edit update destroy]
 
   def index

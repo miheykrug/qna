@@ -50,7 +50,6 @@ feature 'Vote for the question', %q{
 
   scenario 'Author of question try to vote for his question', js: true do
     visit question_path(user_question)
-    save_and_open_page
     within('.question .vote') do
       expect(page).to_not have_link '+'
       expect(page).to_not have_link '-'

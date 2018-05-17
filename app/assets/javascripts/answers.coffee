@@ -14,9 +14,7 @@ editAnswerListener = ->
 bestAnswerTop = ->
   $('.answers').prepend($('.best-answer'))
 
-$(document).ready(editAnswerListener)
 $(document).on('turbolinks:load', editAnswerListener)
 
-$(document).ready(bestAnswerTop)
 $(document).on('turbolinks:load', bestAnswerTop)
 

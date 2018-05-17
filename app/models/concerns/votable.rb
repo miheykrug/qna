@@ -6,15 +6,11 @@ module Votable
   end
 
   def rating_up(user)
-    vote = votes.build(rating: 1)
-    vote.user = user
-    vote.save
+    votes.create!(user: user, rating: 1) unless vote_of?(user)
   end
 
   def rating_down(user)
-    vote = votes.build(rating: -1)
-    vote.user = user
-    vote.save
+    votes.create!(user: user, rating: -1) unless vote_of?(user)
   end
 
   def vote_of?(user)
@@ -22,6 +18,6 @@ module Votable
   end
 
   def rating_sum
-    votes.pluck(:rating).sum
+    votes.sum(:rating)
   end
 end
