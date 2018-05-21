@@ -12,7 +12,11 @@
 //
 //= require jquery
 //= require rails-ujs
+//= require action_cable
 //= require activestorage
 //= require turbolinks
 //= require cocoon
 //= require_tree .
+
+var App = App || {};
+App.cable = ActionCable.createConsumer();

@@ -5,6 +5,8 @@ class QuestionsController < ApplicationController
                                               rating_up rating_down rating_cancel]
   before_action :load_question, only: %i[show edit update destroy]
 
+  after_action :publish_question, only: %i[create]
+
   def index
     @questions = Question.all
   end
@@ -50,6 +52,17 @@ class QuestionsController < ApplicationController
 
   def question_params
     params.require(:question).permit(:title, :body, attachments_attributes: [:file])
+  end
+
+  def publish_question
+    return if @question.errors.any?
+    ActionCable.server.broadcast(
+      'questions',
+      ApplicationController.render(
+        partial: 'questions/question',
+        locals: { question: @question }
+      )
+    )
   end
 
   def load_question

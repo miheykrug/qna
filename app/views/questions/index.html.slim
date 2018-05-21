@@ -4,7 +4,8 @@ h1 Questions list
 p = link_to 'Ask question', new_question_path
 
 table
-  tr
-    th Title
-    th Body
-  = render @questions
+  tbody.questions-list
+    tr
+      th Title
+      th Body
+    = render @questions
