@@ -7,7 +7,7 @@ feature 'Vote for the question', %q{
 } do
 
   given(:user) {  create(:user) }
-  given(:question) { create(:question) }
+  given!(:question) { create(:question) }
   given(:user_question) { create(:question, user: user) }
 
   background do

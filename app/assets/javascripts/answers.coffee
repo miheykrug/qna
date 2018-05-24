@@ -2,7 +2,7 @@
 # All this logic will automatically be available in application.js.
 # You can use CoffeeScript in this file: http://coffeescript.org/
 
-editAnswerListener = ->
+$(document).on('turbolinks:load', ->
   editAnswer = (e) ->
     e.preventDefault();
     $(this).hide();
@@ -11,10 +11,7 @@ editAnswerListener = ->
 
   $('.answers').on 'click', '.edit-answer-link', editAnswer
 
-bestAnswerTop = ->
   $('.answers').prepend($('.best-answer'))
 
-$(document).on('turbolinks:load', editAnswerListener)
-
-$(document).on('turbolinks:load', bestAnswerTop)
+)
 

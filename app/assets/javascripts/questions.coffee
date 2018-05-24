@@ -10,6 +10,7 @@ $(document).on('turbolinks:load', ->
   $('.edit-question-link').click editQuestion
 
   questionsList = $('.questions-list')
+
   App.cable.subscriptions.create('QuestionsChannel', {
     connected: ->
       @perform 'follow'

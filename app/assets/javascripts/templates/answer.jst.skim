@@ -1,0 +1,19 @@
+div id="answer-#{@answer.id}"
+  p = @answer.body
+  p Answer attachments:
+  ul
+    - for a in @attachments
+      li id="attachment-#{a.id}"
+        a href=a.file_url #{a.file_name}
+  - if (gon.current_user) && (gon.current_user.id == @question.user_id)
+    a data-remote="true" rel="nofollow" data-method="put" href="/answers/#{@answer.id}/best" Best
+  div class="vote Answer-#{@answer.id}"
+    span.up-down
+      - if (gon.current_user) && (gon.current_user.id != @answer.user_id)
+        a data-type="json" data-remote="true" rel="nofollow" data-method="post" href="/answers/#{@answer.id}/rating_up" +
+      span.rating =<> @rating
+      - if (gon.current_user) && (gon.current_user.id != @answer.user_id)
+        a data-type="json" data-remote="true" rel="nofollow" data-method="post" href="/answers/#{@answer.id}/rating_down" -
+    - if (gon.current_user) && (gon.current_user.id != @answer.user_id)
+      a class="cancel-link hide-cancel-link" data-type="json" data-remote="true" rel="nofollow" data-method="delete" href="/answers/#{@answer.id}/rating_cancel" cancel vote
+  hr

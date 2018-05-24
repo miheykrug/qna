@@ -15,6 +15,7 @@ class QuestionsController < ApplicationController
     @answers = @question.answers
     @answer = Answer.new
     @answer.attachments.build
+    gon.current_user = current_user
   end
 
   def new

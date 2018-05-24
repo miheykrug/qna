@@ -1,5 +1,5 @@
 h1.question-title = @question.title
-.question
+= content_tag :div, class: 'question', data: { question_id: @question.id }
   p.question-body = @question.body
   p Attachments:
   ul

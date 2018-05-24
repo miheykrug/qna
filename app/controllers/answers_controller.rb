@@ -6,6 +6,8 @@ class AnswersController < ApplicationController
   before_action :load_question, only: %i[create]
   before_action :load_answer, only: %i[update destroy best]
 
+  after_action :publish_answer, only: %i[create]
+
   def create
     @answer = @question.answers.build(answer_params)
     @answer.user = current_user
@@ -35,6 +37,18 @@ class AnswersController < ApplicationController
 
   def load_answer
     @answer = Answer.find(params[:id])
+  end
+
+  def publish_answer
+    return if @answer.errors.any?
+    attachments = @answer.attachments.map do |a|
+      { id: a.id, file_url: a.file.url, file_name: a.file.filename }
+    end
+
+    ActionCable.server.broadcast(
+      "question_#{@question.id}",
+      { answer: @answer, attachments: attachments, question: @question, rating: @answer.rating_sum }
+    )
   end
 
   def answer_params
