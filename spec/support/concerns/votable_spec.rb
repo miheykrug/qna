@@ -1,6 +1,8 @@
 require 'rails_helper'
 
 RSpec.shared_examples_for 'votable' do
+  it { should have_many(:votes).dependent(:destroy) }
+
   let(:model) { described_class }
   let(:user) { create(:user) }
   let(:another_user) { create(:user) }
