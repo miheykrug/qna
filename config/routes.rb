@@ -10,8 +10,13 @@ Rails.application.routes.draw do
       delete :rating_cancel
     end
   end
-  resources :questions, concerns: [:votable] do
-    resources :answers, only: %i[create update destroy], shallow: true, concerns: [:votable] do
+
+  concern :commentable do
+    resources :comments, only: %i[create], shallow: true
+  end
+
+  resources :questions, concerns: [:votable, :commentable] do
+    resources :answers, only: %i[create update destroy], shallow: true, concerns: [:votable, :commentable] do
       member do
         put :best
       end
