@@ -9,13 +9,17 @@
           - if current_user&.author_of?(answer)
             =< link_to 'Delete file', attachment_path(a), method: :delete, remote: true,
                     data: {confirm: 'Аre you sure?'}
-
+    .add-comment-form
+      = render 'comments/form', resource: answer
     - if current_user&.author_of?(answer)
       =<> link_to 'Edit', '', class: 'edit-answer-link', data: { answer_id: answer.id }
       =<> link_to 'Delete answer', answer_path(answer), method: :delete, remote: true,
                   data: { confirm: 'Аre you sure?' }
     - if current_user&.author_of?(answer.question)
       =<> link_to 'Best', best_answer_path(answer), method: :put, remote: true
+    - if current_user
+      =<> link_to 'Add comment', '', class: 'add-comment-link', data: { klass: 'Answer', id: answer.id }
+
     - if current_user&.author_of?(answer)
       p
         =form_with model: answer, class: 'edit_answer', html: { id: "edit-answer-#{answer.id}" } do |f|
@@ -31,4 +35,7 @@
               = link_to_add_association 'add file', f, :attachments, partial: 'questions/attachment_fields'
           = f.submit
   = render 'shared/vote', resource: answer
+  h3 Comments
+  .comments
+    = render answer.comments.order(:created_at)
   hr

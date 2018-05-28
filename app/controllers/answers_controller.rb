@@ -12,10 +12,12 @@ class AnswersController < ApplicationController
     @answer = @question.answers.build(answer_params)
     @answer.user = current_user
     @answer.save
+    @comment = Comment.new
   end
 
   def update
     @answer.update(answer_params) if current_user.author_of?(@answer)
+    @comment = Comment.new
   end
 
   def destroy

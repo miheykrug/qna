@@ -1,5 +1,5 @@
 h1.question-title = @question.title
-= content_tag :div, class: 'question', data: { question_id: @question.id }
+= content_tag :div, class: 'question', id: "question-#{@question.id}", data: { question_id: @question.id }
   p.question-body = @question.body
   p Attachments:
   ul
@@ -28,11 +28,21 @@ h1.question-title = @question.title
           = link_to_add_association 'add file', f, :attachments
       = f.submit
 
+  .add-comment-form
+    = render 'comments/form', resource: @question
+
   - if current_user&.author_of?(@question)
     =<> link_to 'Edit', '', class: 'edit-question-link'
     =<> link_to 'Delete question', question_path(@question), method: :delete,
               data: { confirm: 'Аre you sure?' }
+
+  - if current_user
+    =<> link_to 'Add comment', '', class: 'add-comment-link', data: {klass: 'Question', id: @question.id}
   = render 'shared/vote', resource: @question
+  h3 Comments
+  .comments
+    = render @question.comments.order(:created_at)
+
 h2 Answers
 .answers
   = render @answers

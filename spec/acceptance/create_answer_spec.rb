@@ -45,16 +45,13 @@ feature 'Create answer', %q{
       end
 
       Capybara.using_session('user') do
-        sleep 5
         create_answer(question)
-        sleep 5
         within('.answers') do
           expect(page).to have_content 'My Answer'
         end
       end
 
       Capybara.using_session('guest') do
-        save_and_open_page
         within('.answers') do
           expect(page).to have_content 'My Answer'
         end

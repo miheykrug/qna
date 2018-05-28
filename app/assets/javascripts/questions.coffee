@@ -19,4 +19,6 @@ $(document).on('turbolinks:load', ->
     received: (data) ->
       questionsList.append(data)
   })
+
+
 )

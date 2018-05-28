@@ -1,0 +1,8 @@
+<% if @comment.errors.present? %>
+  $('.new-comment-errors').html('<%= j render 'shared/errors', resource: @comment %>')
+<% else %>
+  $('.new-comment-errors').html('')
+  $('.question .comments').append('<%= j render @comment %>')
+  $('.add-comment-form').hide()
+  $('.add-comment-link').show()
+<% end %>

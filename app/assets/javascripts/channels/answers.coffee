@@ -9,7 +9,7 @@ $(document).on('turbolinks:load', ->
     ,
 
     received: (data) ->
-      if (gon.current_user.id != data.answer.user_id)
+      if (gon.current_user == null) || (gon.current_user.id != data.answer.user_id)
         $(".answers").append(JST["templates/answer"](data));
 
         $('.vote .up-down').bind 'ajax:success', (e) ->

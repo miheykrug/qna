@@ -14,6 +14,7 @@ class QuestionsController < ApplicationController
   def show
     @answers = @question.answers
     @answer = Answer.new
+    @comment = Comment.new
     @answer.attachments.build
     gon.current_user = current_user
   end
