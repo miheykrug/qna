@@ -15,7 +15,6 @@ $(document).on('turbolinks:load', ->
         $('.vote .up-down').bind 'ajax:success', (e) ->
           [data, status, xhr] = e.detail;
           voteContainerClass = '.' + data.klass + '-' + data.id
-          console.log(voteContainerClass)
           $(voteContainerClass + ' .rating').html(data.rating)
           $(voteContainerClass + ' .cancel-link').removeClass('hide-cancel-link')
 

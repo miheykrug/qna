@@ -41,4 +41,32 @@ feature 'Add comment to answer', %q{
       end
     end
   end
+
+  context 'multiple sessions' do
+    scenario "answers's comment appear on another question user's page", js: true do
+      Capybara.using_session('user') do
+        sign_in(user)
+        visit question_path(question)
+      end
+
+      Capybara.using_session('guest') do
+        visit question_path(question)
+      end
+
+      Capybara.using_session('user') do
+        within('.answers') do
+          click_on 'Add comment'
+          fill_in 'New comment', with: 'My comment'
+          click_on 'Create Comment'
+          expect(page).to have_content 'My comment'
+        end
+      end
+
+      Capybara.using_session('guest') do
+        within('.answers') do
+          expect(page).to have_content 'My comment'
+        end
+      end
+    end
+  end
 end
