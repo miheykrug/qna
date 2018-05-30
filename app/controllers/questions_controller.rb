@@ -5,49 +5,38 @@ class QuestionsController < ApplicationController
                                               rating_up rating_down rating_cancel]
   before_action :load_question, only: %i[show edit update destroy]
 
+  before_action :new_answer, only: :show
+
   after_action :publish_question, only: %i[create]
 
+  respond_to :html, :js
+
   def index
-    @questions = Question.all
+    respond_with @questions = Question.all
   end
 
   def show
-    @answers = @question.answers
-    @answer = Answer.new
-    @comment = Comment.new
-    @answer.attachments.build
     gon.current_user = current_user
+    respond_with @question
   end
 
   def new
     @question = current_user.questions.build
-    @question.attachments.build
+    respond_with @question
   end
 
   def update
     @question.update(question_params) if current_user.author_of?(@question)
+    respond_with @question
   end
 
   def create
-    @question = current_user.questions.build(question_params)
-
-    if @question.save
-      flash[:notice] = 'Your question successfully created.'
-      redirect_to @question
-    else
-      render :new
-    end
+    respond_with(@question = current_user.questions.create(question_params))
   end
 
   def destroy
-    if current_user.author_of?(@question)
-      @question.destroy
-      flash[:notice] = 'Question successfully deleted.'
-      redirect_to questions_path
-    else
-      flash[:alert] = 'Only author can delete this question!'
-      redirect_to question_path(@question)
-    end
+    flash[:notice] = 'Question successfully deleted.'
+    respond_with @question.destroy if current_user.author_of?(@question)
   end
 
   private
@@ -69,5 +58,9 @@ class QuestionsController < ApplicationController
 
   def load_question
     @question = Question.find(params[:id])
+  end
+
+  def new_answer
+    @answer = Answer.new
   end
 end

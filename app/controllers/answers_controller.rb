@@ -8,20 +8,21 @@ class AnswersController < ApplicationController
 
   after_action :publish_answer, only: %i[create]
 
+  respond_to :js
+
   def create
     @answer = @question.answers.build(answer_params)
     @answer.user = current_user
-    @answer.save
-    @comment = Comment.new
+    respond_with @answer.save
   end
 
   def update
     @answer.update(answer_params) if current_user.author_of?(@answer)
-    @comment = Comment.new
+    respond_with @answer
   end
 
   def destroy
-    @answer.destroy if current_user.author_of?(@answer)
+    respond_with(@answer.destroy) if current_user.author_of?(@answer)
   end
 
   def best

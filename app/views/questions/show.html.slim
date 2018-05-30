@@ -22,7 +22,7 @@ h1.question-title = @question.title
         = f.text_area :body
       p Attachments:
       p
-        = f.fields_for :attachments do |a|
+        = f.fields_for :attachments, @answer.attachments.build do |a|
           = render 'attachment_fields', f: a
         .links
           = link_to_add_association 'add file', f, :attachments
@@ -45,7 +45,7 @@ h1.question-title = @question.title
 
 h2 Answers
 .answers
-  = render @answers
+  = render @question.answers
 
 h2 New answer
 .answer-form
