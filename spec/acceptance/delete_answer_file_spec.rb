@@ -18,7 +18,7 @@ feature 'Delete answer file', %q{
       visit question_path(question)
       within('.answers') do
         click_on 'Delete file'
-        page.driver.browser.switch_to.alert.accept
+        page.driver.accept_js_confirms!
 
         expect(page).to_not have_link 'rails_helper.rb'
       end

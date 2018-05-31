@@ -10,7 +10,7 @@ feature 'Delete answer' do
     sign_in(author)
     visit question_path(question)
     click_on 'Delete answer'
-    page.driver.browser.switch_to.alert.accept
+    page.driver.accept_js_confirms!
     expect(page).to_not have_content answer.body
   end
 

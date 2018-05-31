@@ -1,8 +1,8 @@
 require 'rails_helper'
 
 RSpec.configure do |config|
-  # Не смог установить gem capybara-webkit.
-  # Capybara.javascript_driver = :webkit
+  Capybara.javascript_driver = :webkit
+
   config.include AcceptanceMacros, type: :feature
 
   config.use_transactional_fixtures = false
