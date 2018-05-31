@@ -4,8 +4,7 @@ class CommentsController < ApplicationController
   after_action :publish_comment, only: %i[create]
 
   def create
-    @comment = @resource.comments.build(comment_params)
-    @comment.user = current_user
+    @comment = @resource.comments.build(comment_params.merge(user: current_user))
     if @comment.save
       render json: { comment: @comment, user_email: @comment.user.email }
     else

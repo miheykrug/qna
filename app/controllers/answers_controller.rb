@@ -11,9 +11,7 @@ class AnswersController < ApplicationController
   respond_to :js
 
   def create
-    @answer = @question.answers.build(answer_params)
-    @answer.user = current_user
-    respond_with @answer.save
+    respond_with(@answer = @question.answers.create(answer_params.merge(user: current_user)))
   end
 
   def update
