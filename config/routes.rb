@@ -1,6 +1,6 @@
 Rails.application.routes.draw do
   get 'attachments/destroy'
-  devise_for :users
+  devise_for :users, controllers: { omniauth_callbacks: 'omniauth_callbacks' }
   root to: "questions#index"
 
   concern :votable do
