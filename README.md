@@ -21,4 +21,4 @@ Things you may want to cover:
 
 * Deployment instructions
 
-* ...
+* Credentials settings: https://medium.com/cedarcode/rails-5-2-credentials-9b3324851336
