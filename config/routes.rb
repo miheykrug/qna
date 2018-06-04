@@ -1,6 +1,9 @@
 Rails.application.routes.draw do
   get 'attachments/destroy'
+  get 'users/edit_email'
+  patch 'users/update_email'
   devise_for :users, controllers: { omniauth_callbacks: 'omniauth_callbacks' }
+
   root to: "questions#index"
 
   concern :votable do

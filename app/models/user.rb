@@ -28,4 +28,8 @@ class User < ApplicationRecord
     user.authorizations.create(provider: auth.provider, uid: auth.uid)
     user
   end
+
+  def temp_email?
+    email =~ /must@change.com/
+  end
 end

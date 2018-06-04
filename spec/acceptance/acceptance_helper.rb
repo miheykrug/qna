@@ -4,6 +4,7 @@ RSpec.configure do |config|
   Capybara.javascript_driver = :webkit
 
   config.include AcceptanceMacros, type: :feature
+  config.include OmniauthMacros, type: :feature
 
   config.use_transactional_fixtures = false
 
@@ -29,3 +30,5 @@ RSpec.configure do |config|
 
   Capybara.server = :puma
 end
+
+OmniAuth.config.test_mode = true
