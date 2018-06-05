@@ -20,7 +20,7 @@ feature 'Authorization from providers', %{
       fill_in 'Email', with: email
       click_on 'Continue'
 
-      page.should have_content("Log out")
+      expect(page).to have_content("Log out")
     end
 
     scenario 'User is already authorized', js: true do
@@ -48,7 +48,6 @@ feature 'Authorization from providers', %{
 
       visit new_user_session_path
       click_on 'Sign in with Vkontakte'
-
       expect(page).to have_content('Successfully authenticated from Vkontakte account.')
     end
   end
