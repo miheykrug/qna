@@ -11,6 +11,8 @@ class QuestionsController < ApplicationController
 
   respond_to :html, :js
 
+  authorize_resource
+
   def index
     respond_with @questions = Question.all
   end
@@ -26,7 +28,7 @@ class QuestionsController < ApplicationController
   end
 
   def update
-    @question.update(question_params) if current_user.author_of?(@question)
+    @question.update(question_params) #if current_user.author_of?(@question)
     respond_with @question
   end
 
@@ -36,7 +38,7 @@ class QuestionsController < ApplicationController
 
   def destroy
     flash[:notice] = 'Question successfully deleted.'
-    respond_with @question.destroy if current_user.author_of?(@question)
+    respond_with @question.destroy #if current_user.author_of?(@question)
   end
 
   private

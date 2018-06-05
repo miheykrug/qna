@@ -6,20 +6,19 @@ module Voted
   end
 
   def rating_up
-    unless current_user&.author_of?(@votable)
-      @votable.rating_up(current_user)
-      render_voted_json
-    end
+    authorize! :rating_up, @votable
+    @votable.rating_up(current_user)
+    render_voted_json
   end
 
   def rating_down
-    unless current_user&.author_of?(@votable)
-      @votable.rating_down(current_user)
-      render_voted_json
-    end
+    authorize! :rating_down, @votable
+    @votable.rating_down(current_user)
+    render_voted_json
   end
 
   def rating_cancel
+    authorize! :rating_cancel, @votable
     @vote = @votable.votes.find_by(user_id: current_user)
     @vote.destroy if @vote
     render_voted_json
