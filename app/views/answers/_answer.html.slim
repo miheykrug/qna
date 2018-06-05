@@ -6,21 +6,22 @@
       - answer.attachments.each do |a|
         li id="attachment-#{a.id}"
           = link_to a.file.filename, a.file.url
-          - if current_user&.author_of?(answer)
+          - if can?(:destroy, a)
             =< link_to 'Delete file', attachment_path(a), method: :delete, remote: true,
                     data: {confirm: 'Аre you sure?'}
     .add-comment-form
       = render 'comments/form', resource: answer
-    - if current_user&.author_of?(answer)
+    -if can?(:edit, answer)
       =<> link_to 'Edit', '', class: 'edit-answer-link', data: { answer_id: answer.id }
+    -if can?(:destroy, answer)
       =<> link_to 'Delete answer', answer_path(answer), method: :delete, remote: true,
                   data: { confirm: 'Аre you sure?' }
-    - if current_user&.author_of?(answer.question)
+    - if can?(:best, answer)
       =<> link_to 'Best', best_answer_path(answer), method: :put, remote: true
-    - if current_user
+    - if can?(:create, Comment)
       =<> link_to 'Add comment', '', class: 'add-comment-link', data: { klass: 'Answer', id: answer.id }
 
-    - if current_user&.author_of?(answer)
+    -if can?(:edit, answer)
       p
         =form_with model: answer, class: 'edit_answer', html: { id: "edit-answer-#{answer.id}" } do |f|
           .edit-answer-errors

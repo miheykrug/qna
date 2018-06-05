@@ -7,7 +7,7 @@ h1.question-title = @question.title
       li id="attachment-#{a.id}"
         => link_to a.file.filename, a.file.url
         ||
-        - if current_user&.author_of?(@question)
+        - if can?(:destroy, a)
           =< link_to 'Delete file', attachment_path(a), method: :delete, remote: true,
                   data: { confirm: 'Аre you sure?' }
   .question-errors
@@ -31,12 +31,13 @@ h1.question-title = @question.title
   .add-comment-form
     = render 'comments/form', resource: @question
 
-  - if current_user&.author_of?(@question)
+  - if can?(:update, @question)
     =<> link_to 'Edit', '', class: 'edit-question-link'
+  - if can?(:destroy, @question)
     =<> link_to 'Delete question', question_path(@question), method: :delete,
               data: { confirm: 'Аre you sure?' }
 
-  - if current_user
+  - if can?(:create, Comment)
     =<> link_to 'Add comment', '', class: 'add-comment-link', data: {klass: 'Question', id: @question.id}
   = render 'shared/vote', resource: @question
   h3 Comments
