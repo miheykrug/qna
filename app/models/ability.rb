@@ -30,7 +30,11 @@ class Ability
     cannot [:rating_up, :rating_down, :rating_cancel], [Question, Answer], user: user
 
     can :best, Answer do |answer|
-      answer.question.user == user
+      user.author_of?(answer.question)
+    end
+
+    can :destroy, Attachment do |attachment|
+      user.author_of?(attachment.attachable)
     end
   end
 end

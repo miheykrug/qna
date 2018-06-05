@@ -32,6 +32,9 @@ describe Ability do
     let(:comment) { create(:comment, commentable: question, user: user) }
     let(:other_comment) { create(:comment, commentable: question, user: other) }
 
+    let(:attachment) { create(:attachment, attachable: question) }
+    let(:other_attachment) { create(:attachment, attachable: other_question) }
+
     it { should_not be_able_to :manage, :all }
     it { should be_able_to :read, :all }
 
@@ -68,5 +71,8 @@ describe Ability do
 
     it { should be_able_to :best, answer, user: user }
     it { should_not be_able_to :best, other_answer, user: user }
+
+    it { should be_able_to :destroy, attachment, user: user }
+    it { should_not be_able_to :destroy, other_attachment, user: user }
   end
 end

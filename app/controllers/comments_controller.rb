@@ -3,6 +3,8 @@ class CommentsController < ApplicationController
   before_action :load_resource, only: %i[create]
   after_action :publish_comment, only: %i[create]
 
+  authorize_resource
+
   def create
     @comment = @resource.comments.build(comment_params.merge(user: current_user))
     if @comment.save
