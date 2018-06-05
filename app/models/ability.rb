@@ -28,5 +28,9 @@ class Ability
     can :destroy, [Question, Answer], user: user
     can [:rating_up, :rating_down, :rating_cancel], [Question, Answer]
     cannot [:rating_up, :rating_down, :rating_cancel], [Question, Answer], user: user
+
+    can :best, Answer do |answer|
+      answer.question.user == user
+    end
   end
 end

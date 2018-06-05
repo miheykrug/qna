@@ -26,8 +26,8 @@ describe Ability do
     let(:question) { create(:question, user: user) }
     let(:other_question) { create(:question, user: other) }
 
-    let(:answer) { create(:answer, user: user) }
-    let(:other_answer) { create(:answer, user: other) }
+    let(:answer) { create(:answer, question: question, user: user) }
+    let(:other_answer) { create(:answer, question: other_question, user: other) }
 
     let(:comment) { create(:comment, commentable: question, user: user) }
     let(:other_comment) { create(:comment, commentable: question, user: other) }
@@ -65,5 +65,8 @@ describe Ability do
 
     it { should_not be_able_to :rating_cancel, question, user: user }
     it { should be_able_to :rating_cancel, other_question, user: user }
+
+    it { should be_able_to :best, answer, user: user }
+    it { should_not be_able_to :best, other_answer, user: user }
   end
 end
