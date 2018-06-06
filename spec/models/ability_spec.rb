@@ -35,6 +35,9 @@ describe Ability do
     let(:attachment) { create(:attachment, attachable: question) }
     let(:other_attachment) { create(:attachment, attachable: other_question) }
 
+    let!(:vote) { create(:vote, votable: question, user: user) }
+    let!(:other_vote) { create(:vote, votable: other_question, user: other) }
+
     it { should_not be_able_to :manage, :all }
     it { should be_able_to :read, :all }
 
@@ -66,8 +69,8 @@ describe Ability do
     it { should_not be_able_to :rating_down, question, user: user }
     it { should be_able_to :rating_down, other_question, user: user }
 
-    it { should_not be_able_to :rating_cancel, question, user: user }
-    it { should be_able_to :rating_cancel, other_question, user: user }
+    it { should be_able_to :rating_cancel, question, user: user }
+    it { should_not be_able_to :rating_cancel, other_question, user: user }
 
     it { should be_able_to :best, answer, user: user }
     it { should_not be_able_to :best, other_answer, user: user }

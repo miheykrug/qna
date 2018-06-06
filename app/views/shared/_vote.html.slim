@@ -5,7 +5,7 @@ div class="vote #{resource.class}-#{resource.id}"
     span.rating =<> resource.rating_sum
     - if can?(:rating_down, resource)
       =<> link_to '-', polymorphic_path(resource, action: :rating_down), method: :post, remote: true, data: { type: :json }
-  - if can?(:rating_cancel, resource)
+  - if can?(:rating_up, resource)
     =<> link_to 'cancel vote', polymorphic_path(resource, action: :rating_cancel),
             class: "cancel-link #{'hide-cancel-link' unless resource.vote_of?(current_user)}",
             method: :delete, remote: true, data: { type: :json }

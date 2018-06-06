@@ -24,10 +24,14 @@ class Ability
   def user_abilities
     guest_abilities
     can :create, [Question, Answer, Comment]
-    can :update, [Question, Answer, Comment], user: user
-    can :destroy, [Question, Answer], user: user
-    can [:rating_up, :rating_down, :rating_cancel], [Question, Answer]
-    cannot [:rating_up, :rating_down, :rating_cancel], [Question, Answer], user: user
+    can :update, [Question, Answer, Comment], user_id: user.id
+    can :destroy, [Question, Answer], user_id: user.id
+    can [:rating_up, :rating_down], [Question, Answer]
+    cannot [:rating_up, :rating_down, :rating_cancel], [Question, Answer], user_id: user.id
+
+    can :rating_cancel, [Question, Answer] do |resource|
+      resource.votes.find_by(user_id: user)
+    end
 
     can :best, Answer do |answer|
       user.author_of?(answer.question)
