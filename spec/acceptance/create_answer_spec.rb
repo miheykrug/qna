@@ -28,7 +28,7 @@ feature 'Create answer', %q{
   end
 
 
-  scenario 'Non-authenticated user create answer' do
+  scenario 'Non-authenticated user create answer', js: true do
     create_answer(question)
     expect(page).to have_content 'You need to sign in or sign up before continuing.'
   end
