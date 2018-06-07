@@ -4,6 +4,20 @@ class Api::V1::ProfilesController < ApplicationController
   respond_to :json
 
   def me
-    respond_with current_user
+    respond_with current_resource_owner
+  end
+
+  def index
+    respond_with all_without_current_resource_owner
+  end
+
+  protected
+
+  def current_resource_owner
+    @current_resource_owner ||= User.find(doorkeeper_token.resource_owner_id) if doorkeeper_token
+  end
+
+  def all_without_current_resource_owner
+    @users ||= User.where.not(id: doorkeeper_token.resource_owner_id) if doorkeeper_token
   end
 end
