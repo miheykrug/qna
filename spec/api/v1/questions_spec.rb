@@ -119,8 +119,6 @@ describe 'Questions API' do
   end
 
   describe 'POST /create' do
-
-
     context 'unauthorized' do
       it 'returns 401 status if there is no access_token' do
         post "/api/v1/questions", params: { format: :json }
@@ -139,7 +137,20 @@ describe 'Questions API' do
 
       context 'with valid attributes' do
         it 'save the new question in database' do
-          expect { post "/api/v1/questions", params: { format: :json, question: attributes_for(:question), access_token: access_token.token } }.to change(Question, :count).by(1)
+          expect { post "/api/v1/questions", params: { format: :json, question: attributes_for(:question),
+                                                       access_token: access_token.token } }.to change(Question, :count).by(1)
+        end
+
+        it 'new question has association with user' do
+          expect { post "/api/v1/questions", params: { format: :json, question: attributes_for(:question),
+                                                       access_token: access_token.token } }.to change(user.questions, :count).by(1)
+        end
+      end
+
+      context 'with invalid attributes' do
+        it 'does not save the question in database' do
+          expect { post "/api/v1/questions", params: { format: :json, question: attributes_for(:invalid_question),
+                                                       access_token: access_token.token } }.to_not change(Question, :count)
         end
       end
     end

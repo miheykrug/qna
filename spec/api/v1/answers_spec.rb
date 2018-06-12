@@ -100,5 +100,43 @@ describe 'Questions API' do
         end
       end
     end
+    end
+
+  describe 'POST /create' do
+    context 'unauthorized' do
+      it 'returns 401 status if there is no access_token' do
+        post "/api/v1/questions/#{question.id}/answers", params: { format: :json }
+        expect(response.status).to eq 401
+      end
+
+      it 'returns 401 status if access_token is invalid' do
+        post "/api/v1/questions/#{question.id}/answers", params: { format: :json, access_token: '1234' }
+        expect(response.status).to eq 401
+      end
+    end
+
+    context 'authorized' do
+      let(:user) { create(:user) }
+      let(:access_token) { create(:access_token, resource_owner_id: user.id) }
+
+      context 'with valid attributes' do
+        it 'save the new answer in database' do
+          expect { post "/api/v1/questions/#{question.id}/answers", params: { format: :json, answer: attributes_for(:answer),
+                                                       access_token: access_token.token } }.to change(question.answers, :count).by(1)
+        end
+
+        it 'new answer has association with user' do
+          expect { post "/api/v1/questions/#{question.id}/answers", params: { format: :json, answer: attributes_for(:answer),
+                                                       access_token: access_token.token } }.to change(user.answers, :count).by(1)
+        end
+      end
+
+      context 'with invalid attributes' do
+        it 'does not save the answer in database' do
+          expect { post "/api/v1/questions/#{question.id}/answers", params: { format: :json, answer: attributes_for(:invalid_answer),
+                                                       access_token: access_token.token } }.to_not change(Answer, :count)
+        end
+      end
+    end
   end
 end
