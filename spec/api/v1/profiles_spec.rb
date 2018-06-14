@@ -8,17 +8,12 @@ describe 'Profile API' do
       let(:me) { create(:user) }
       let(:access_token) { create(:access_token, resource_owner_id: me.id) }
 
-      before { get '/api/v1/profiles/me', params: { format: :json, access_token: access_token.token } }
+      before { do_request(access_token: access_token.token) }
 
-      it 'returns 200 status' do
-        expect(response).to be_success
-      end
+      it_behaves_like "response status"
 
-      %w[id email created_at updated_at admin].each do |attr|
-        it "contains #{attr}" do
-          expect(response.body).to be_json_eql(me.send(attr.to_sym).to_json).at_path(attr)
-        end
-      end
+      let(:resource) { me }
+      it_behaves_like "check resource attributes", %w[id email created_at updated_at admin], ""
 
       %w[password encrypted_password].each do |attr|
         it "does not contains #{attr}" do
@@ -26,31 +21,22 @@ describe 'Profile API' do
         end
       end
     end
-
+    def do_request(options = {})
+      get '/api/v1/profiles/me', params: { format: :json }.merge(options)
+    end
   end
 
   describe 'GET /' do
-    context 'unauthorized' do
-      it 'returns 401 status if there is no access_token' do
-        get '/api/v1/profiles', params: { format: :json }
-        expect(response.status).to eq 401
-      end
+    it_behaves_like "API Authenticable"
 
-      it 'returns 401 status if access_token is invalid' do
-        get '/api/v1/profiles', params: { format: :json, access_token: '1234' }
-        expect(response.status).to eq 401
-      end
-    end
     context 'authorized' do
       let(:me) { create(:user) }
       let(:access_token) { create(:access_token, resource_owner_id: me.id) }
       let!(:others) { create_list(:user, 3) }
 
-      before { get '/api/v1/profiles', params: { format: :json, access_token: access_token.token } }
+      before { do_request(access_token: access_token.token) }
 
-      it 'returns 200 status' do
-        expect(response).to be_success
-      end
+      it_behaves_like "response status"
 
       it 'does not contains me' do
         expect(response.body).to_not include_json(me.to_json)
@@ -60,9 +46,9 @@ describe 'Profile API' do
         expect(response.body).to be_json_eql(others.to_json)
       end
     end
-  end
 
-  def do_request(options = {})
-    get '/api/v1/profiles/me', params: { format: :json }.merge(options)
+    def do_request(options = {})
+      get '/api/v1/profiles', params: { format: :json }.merge(options)
+    end
   end
 end
