@@ -1,0 +1,8 @@
+h1 Daily#digest
+p
+  | New questions
+  =< Date.today
+ul
+  - @day_questions.each do |question|
+    li = link_to question.title, question_url(question), target: '_blank'
+
