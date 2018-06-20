@@ -27,7 +27,11 @@ h1.question-title = @question.title
         .links
           = link_to_add_association 'add file', f, :attachments
       = f.submit
-
+  =<> button_to 'Subscribe to question', subscribe_question_path(@question),
+                class: "subscribe_button#{' hide-button' unless can?(:subscribe, @question)}", remote: true
+  =<> button_to 'Unsubscribe to question', unsubscribe_question_path, method: :delete,
+                class: "unsubscribe_button#{' hide-button' unless can?(:unsubscribe, @question)}", remote: true
+  - if can?(:create, Comment)
   .add-comment-form
     = render 'comments/form', resource: @question
 
@@ -36,9 +40,7 @@ h1.question-title = @question.title
   - if can?(:destroy, @question)
     =<> link_to 'Delete question', question_path(@question), method: :delete,
               data: { confirm: 'Аre you sure?' }
-
-  - if can?(:create, Comment)
-    =<> link_to 'Add comment', '', class: 'add-comment-link', data: {klass: 'Question', id: @question.id}
+  =<> link_to 'Add comment', '', class: 'add-comment-link', data: {klass: 'Question', id: @question.id}
   = render 'shared/vote', resource: @question
   h3 Comments
   .comments

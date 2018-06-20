@@ -15,8 +15,14 @@ describe Ability do
 
   describe 'for admin' do
     let(:user) { create(:user, admin: true) }
+    let(:other) { create(:user) }
+
+    let(:question) { create(:question, user: user) }
+    let(:other_question) { create(:question, user: other) }
 
     it { should be_able_to :manage, :all }
+
+    it { should_not be_able_to :subscribe, question, user: user }
   end
 
   describe 'for user' do
@@ -77,5 +83,8 @@ describe Ability do
 
     it { should be_able_to :destroy, attachment, user: user }
     it { should_not be_able_to :destroy, other_attachment, user: user }
+
+    it { should be_able_to :subscribe, other_question, user: user }
+    it { should_not be_able_to :subscribe, question, user: user }
   end
 end

@@ -14,4 +14,24 @@ RSpec.describe Question, type: :model do
 
   it_behaves_like 'votable'
   it_behaves_like 'commentable'
+
+  describe '#subscribe_author' do
+    let(:user) { create(:user) }
+    subject { build(:question, user: user) }
+
+    it 'should send subscribe_author method after create question' do
+      expect(subject).to receive(:subscribe_author)
+      subject.save!
+    end
+
+    it 'should not send subscribe_author method after create question' do
+      subject.save!
+      expect(subject).to_not receive(:subscribe_author)
+      subject.update(body: '123')
+    end
+
+    it 'should subscribe author to question' do
+      expect{ subject.save! }.to change(subject.subscribers, :count).by(1)
+    end
+  end
 end

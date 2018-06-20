@@ -2,8 +2,8 @@ class QuestionsController < ApplicationController
   include Voted
 
   before_action :authenticate_user!, only: %i[new create edit update destroy
-                                              rating_up rating_down rating_cancel]
-  before_action :load_question, only: %i[show edit update destroy]
+                                              rating_up rating_down rating_cancel subscribe]
+  before_action :load_question, only: %i[show edit update destroy subscribe unsubscribe]
 
   before_action :new_answer, only: :show
 
@@ -39,6 +39,15 @@ class QuestionsController < ApplicationController
   def destroy
     flash[:notice] = 'Question successfully deleted.'
     respond_with @question.destroy
+  end
+
+  def subscribe
+    @question.subscribers.push(current_user)
+  end
+
+  def unsubscribe
+    @subscribe = @question.subscriptions.find_by(user_id: current_user)
+    @subscribe.destroy if @subscribe
   end
 
   private

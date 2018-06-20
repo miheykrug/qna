@@ -19,6 +19,14 @@ class Ability
 
   def admin_abilities
     can :manage, :all
+    cannot :subscribe, Question do |question|
+      question.subscriptions.find_by(user_id: user)
+    end
+
+    cannot :unsubscribe, Question do |question|
+      question.subscriptions.find_by(user_id: user).nil?
+    end
+
   end
 
   def user_abilities
@@ -31,6 +39,14 @@ class Ability
 
     can :rating_cancel, [Question, Answer] do |resource|
       resource.votes.find_by(user_id: user)
+    end
+
+    can :subscribe, Question do |question|
+      question.subscriptions.find_by(user_id: user).nil?
+    end
+
+    can :unsubscribe, Question do |question|
+      question.subscriptions.find_by(user_id: user)
     end
 
     can :best, Answer do |answer|

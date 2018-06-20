@@ -31,7 +31,12 @@ Rails.application.routes.draw do
         put :best
       end
     end
+    member do
+      post :subscribe
+      delete :unsubscribe
+    end
   end
+
   resources :attachments, only: %i[destroy]
 
   namespace :api do
