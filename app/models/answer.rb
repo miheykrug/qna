@@ -10,10 +10,21 @@ class Answer < ApplicationRecord
 
   accepts_nested_attributes_for :attachments, reject_if: :all_blank, allow_destroy: true
 
+  after_create :notify_subscribers
+
   def set_best_answer
     ActiveRecord::Base.transaction do
       question.answers.update_all(best: false)
       update!(best: true)
+    end
+  end
+
+  private
+
+  def notify_subscribers
+    users = question.subscribers
+    users.each do |user|
+      AnswerMailer.new_notify(user, question).deliver_later
     end
   end
 end

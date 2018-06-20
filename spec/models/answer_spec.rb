@@ -27,6 +27,23 @@ RSpec.describe Answer, type: :model do
     end
   end
 
+  describe '#notify_subscribers' do
+    let(:user) { create(:user) }
+    let(:question) { create(:question) }
+    subject { build(:answer, question: question, user: user) }
+
+    it 'should send notify_subscribers method after create question' do
+      expect(subject).to receive(:notify_subscribers)
+      subject.save!
+    end
+
+    it 'should not send notify_subscribers method after create question' do
+      subject.save!
+      expect(subject).to_not receive(:notify_subscribers)
+      subject.update(body: '123')
+    end
+  end
+
   it_behaves_like 'votable'
   it_behaves_like 'commentable'
 end
