@@ -22,9 +22,6 @@ class Answer < ApplicationRecord
   private
 
   def notify_subscribers
-    users = question.subscribers
-    users.each do |user|
-      AnswerMailer.new_notify(user, question).deliver_later
-    end
+    NewAnswerNotifyJob.perform_later(self)
   end
 end
