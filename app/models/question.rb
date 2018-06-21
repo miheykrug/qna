@@ -15,6 +15,10 @@ class Question < ApplicationRecord
 
   after_create :subscribe_author
 
+  def subscription(user)
+    subscriptions.find_by(user: user)
+  end
+
   private
 
   def subscribe_author

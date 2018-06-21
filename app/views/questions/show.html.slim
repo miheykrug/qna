@@ -27,10 +27,11 @@ h1.question-title = @question.title
         .links
           = link_to_add_association 'add file', f, :attachments
       = f.submit
-  =<> button_to 'Subscribe to question', subscribe_question_path(@question),
-                class: "subscribe_button#{' hide-button' unless can?(:subscribe, @question)}", remote: true
-  =<> button_to 'Unsubscribe to question', unsubscribe_question_path, method: :delete,
-                class: "unsubscribe_button#{' hide-button' unless can?(:unsubscribe, @question)}", remote: true
+  - if can?(:create, Subscription)
+    =<> button_to 'Subscribe to question', question_subscriptions_path(@question),
+                  class: "subscribe_button#{' hide-button' if @question.subscription(current_user)}", remote: true
+    =<> button_to 'Unsubscribe to question', question_subscriptions_path(@question), method: :delete,
+                  class: "unsubscribe_button#{' hide-button' unless @question.subscription(current_user)}", remote: true
   - if can?(:create, Comment)
   .add-comment-form
     = render 'comments/form', resource: @question

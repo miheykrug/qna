@@ -22,7 +22,6 @@ describe Ability do
 
     it { should be_able_to :manage, :all }
 
-    it { should_not be_able_to :subscribe, question, user: user }
   end
 
   describe 'for user' do
@@ -50,6 +49,7 @@ describe Ability do
     it { should be_able_to :create, Question }
     it { should be_able_to :create, Answer }
     it { should be_able_to :create, Comment }
+    it { should be_able_to :create, Subscription }
 
     it { should be_able_to :update, question, user: user }
     it { should_not be_able_to :update, other_question, user: user }
@@ -83,8 +83,5 @@ describe Ability do
 
     it { should be_able_to :destroy, attachment, user: user }
     it { should_not be_able_to :destroy, other_attachment, user: user }
-
-    it { should be_able_to :subscribe, other_question, user: user }
-    it { should_not be_able_to :subscribe, question, user: user }
   end
 end

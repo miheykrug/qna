@@ -191,27 +191,4 @@ RSpec.describe QuestionsController, type: :controller do
   end
 
   it_behaves_like 'voted resource'
-
-  describe 'POST #subscribe' do
-    @user = sign_in_user
-    let!(:question) { create(:question) }
-    let(:subscribe!) { post :subscribe, params: { id: question, format: :js } }
-    it 'save the new subscription in database' do
-      expect { subscribe! }.to change(@user.tracked_questions, :count).by(1)
-    end
-
-    it 'not save the second subscription in database' do
-      subscribe!
-      expect { subscribe! }.to_not change(Subscription, :count)
-    end
-  end
-
-  describe 'DELETE #unsubscribe' do
-    @user = sign_in_user
-    let!(:question) { create(:question, user: @user) }
-
-    it 'delete subscription' do
-      expect { delete :unsubscribe, params: { id: question, format: :js } }.to change(Subscription, :count).by(-1)
-    end
-  end
 end

@@ -19,19 +19,11 @@ class Ability
 
   def admin_abilities
     can :manage, :all
-    cannot :subscribe, Question do |question|
-      question.subscriptions.find_by(user_id: user)
-    end
-
-    cannot :unsubscribe, Question do |question|
-      question.subscriptions.find_by(user_id: user).nil?
-    end
-
   end
 
   def user_abilities
     guest_abilities
-    can :create, [Question, Answer, Comment]
+    can :create, [Question, Answer, Comment, Subscription]
     can :update, [Question, Answer, Comment], user_id: user.id
     can :destroy, [Question, Answer], user_id: user.id
     can [:rating_up, :rating_down], [Question, Answer]
@@ -41,12 +33,8 @@ class Ability
       resource.votes.find_by(user_id: user)
     end
 
-    can :subscribe, Question do |question|
-      question.subscriptions.find_by(user_id: user).nil?
-    end
-
-    can :unsubscribe, Question do |question|
-      question.subscriptions.find_by(user_id: user)
+    can :destroy, Subscription do |subscription|
+      subscription.question.subscription(user)
     end
 
     can :best, Answer do |answer|

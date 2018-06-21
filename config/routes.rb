@@ -31,10 +31,7 @@ Rails.application.routes.draw do
         put :best
       end
     end
-    member do
-      post :subscribe
-      delete :unsubscribe
-    end
+    resource :subscriptions, only: %i[create destroy]
   end
 
   resources :attachments, only: %i[destroy]

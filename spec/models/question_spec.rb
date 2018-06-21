@@ -34,4 +34,14 @@ RSpec.describe Question, type: :model do
       expect{ subject.save! }.to change(subject.subscribers, :count).by(1)
     end
   end
+
+  describe '#subscription(user)' do
+    let(:user) { create(:user) }
+    let(:question) { create(:question) }
+    let!(:subscription) { create(:subscription, user: user, question: question) }
+
+    it 'returns subscription of the question' do
+      expect(question.subscription(user)).to eq subscription
+    end
+  end
 end
