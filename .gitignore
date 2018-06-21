@@ -42,3 +42,7 @@ secrets.yml
 
 # Ignore .env used for storing keys and access tokens
 .env
+
+# Sphinx
+config/*.sphinx.conf
+db/sphinx
