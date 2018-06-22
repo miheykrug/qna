@@ -6,7 +6,7 @@ class QueriesController < ApplicationController
     query = params[:query]
     resource = params[:resource].constantize unless params[:resource].empty?
 
-    @results = ThinkingSphinx.search query, :classes => [resource]
+    @results = ThinkingSphinx.search ThinkingSphinx::Query.escape(query), :classes => [resource]
     render json: @results
   end
 end
