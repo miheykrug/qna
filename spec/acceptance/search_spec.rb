@@ -14,11 +14,13 @@ feature 'Search in questions, answers, comments and users' do
   # end
 
   scenario 'try to search question by title', js: true, sphinx: true do
+    ThinkingSphinx::Test.run do
       visit queries_path
       fill_in 'Query', with: question.title
       click_button 'Search'
 
       expect(page).to have_content question.title
       expect(page).to have_content question.body
+    end
   end
 end
