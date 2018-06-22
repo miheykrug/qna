@@ -48,4 +48,6 @@ Rails.application.routes.draw do
   end
 
   mount ActionCable.server => '/cable'
+
+  resources :queries, only: %i[index create]
 end

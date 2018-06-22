@@ -1,0 +1,14 @@
+h1 Search
+
+= form_with url: queries_path, method: :post, class: 'search-form' do |f|
+  p
+    => f.label :resource
+    = f.select :resource, %w[Question Answer Comment User], prompt: 'All'
+  p
+    => f.label :query
+    = f.text_field :query
+  p
+    = f.submit 'Search'
+
+.results
+
