@@ -17,5 +17,10 @@ RSpec.describe QueriesController, type: :controller do
         expect(assigns(:results)).to include(question)
       end
     end
+
+    it 'send search method' do
+      expect(ThinkingSphinx).to receive(:search).with(ThinkingSphinx::Query.escape(question.title), :classes => [Question])
+      post :create, params: { query: question.title, resource: "Question" }
+    end
   end
 end
