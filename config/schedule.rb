@@ -13,6 +13,9 @@
 #   rake "some:great:rake:task"
 # end
 #
+
+env :PATH, Rails.application.credentials[Rails.env.to_sym][:bundle][:PATH]
+
 every 1.day do
   runner "DailyDigestJob.perform_now"
 end
