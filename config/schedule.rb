@@ -14,7 +14,7 @@
 # end
 #
 
-env :PATH, Rails.application.credentials[:bundle][:PATH]
+# env :PATH, Rails.application.credentials[:bundle][:PATH]
 
 every 1.day do
   runner "DailyDigestJob.perform_now"

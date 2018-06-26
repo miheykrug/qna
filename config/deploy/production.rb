@@ -23,6 +23,7 @@ role :db,  %w{deployer@51.15.254.251}
 
 set :rails_env, :production
 set :rvm_type, :user
+set :stage, :production
 # Configuration
 # =============
 # You can set any configuration variable like in config/deploy.rb
