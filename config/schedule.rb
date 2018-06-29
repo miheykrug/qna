@@ -22,6 +22,7 @@ end
 
 every 60.minutes do
   rake "ts:index"
+  rake "ts:restart"
 end
 
 # Learn more: http://github.com/javan/whenever
