@@ -1,3 +1,4 @@
-tr
-  th = link_to question.title, question_path(question)
-  th = question.body.truncate(25)
+- cache question do
+  tr
+    th = link_to question.title, question_path(question)
+    th = question.body.truncate(25)

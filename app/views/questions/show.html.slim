@@ -1,56 +1,58 @@
-h1.question-title = @question.title
-= content_tag :div, class: 'question', id: "question-#{@question.id}", data: { question_id: @question.id }
-  p.question-body = @question.body
-  p Attachments:
-  ul
-    - @question.attachments.each do |a|
-      li id="attachment-#{a.id}"
-        => link_to a.file.filename, a.file.url
-        ||
-        - if can?(:destroy, a)
-          =< link_to 'Delete file', attachment_path(a), method: :delete, remote: true,
-                  data: { confirm: 'Аre you sure?' }
-  .question-errors
-  .edit-question-form
-    = form_with model: @question do |f|
-      = render 'shared/errors', resource: @question
-      p
-        = f.label :title
-        = f.text_field :title
-      p
-        = f.label :body
-        = f.text_area :body
-      p Attachments:
-      p
-        = f.fields_for :attachments, @answer.attachments.build do |a|
-          = render 'attachment_fields', f: a
-        .links
-          = link_to_add_association 'add file', f, :attachments
-      = f.submit
-  - if can?(:create, Subscription)
-    =<> button_to 'Subscribe to question', question_subscriptions_path(@question),
-                  class: "subscribe_button#{' hide-button' if @question.subscription(current_user)}", remote: true
-    =<> button_to 'Unsubscribe to question', question_subscriptions_path(@question), method: :delete,
-                  class: "unsubscribe_button#{' hide-button' unless @question.subscription(current_user)}", remote: true
-  - if can?(:create, Comment)
-  .add-comment-form
-    = render 'comments/form', resource: @question
+- cache @question do
+  h1.question-title = @question.title
+  = content_tag :div, class: 'question', id: "question-#{@question.id}", data: { question_id: @question.id }
+    p.question-body = @question.body
+    p Attachments:
+    ul
+      - @question.attachments.each do |a|
+        - cache a do
+          li id="attachment-#{a.id}"
+            => link_to a.file.filename, a.file.url
+            ||
+            - if can?(:destroy, a)
+              =< link_to 'Delete file', attachment_path(a), method: :delete, remote: true,
+                      data: { confirm: 'Аre you sure?' }
+    .question-errors
+    .edit-question-form
+      = form_with model: @question do |f|
+        = render 'shared/errors', resource: @question
+        p
+          = f.label :title
+          = f.text_field :title
+        p
+          = f.label :body
+          = f.text_area :body
+        p Attachments:
+        p
+          = f.fields_for :attachments, @answer.attachments.build do |a|
+            = render 'attachment_fields', f: a
+          .links
+            = link_to_add_association 'add file', f, :attachments
+        = f.submit
+    - if can?(:create, Subscription)
+      =<> button_to 'Subscribe to question', question_subscriptions_path(@question),
+                    class: "subscribe_button#{' hide-button' if @question.subscription(current_user)}", remote: true
+      =<> button_to 'Unsubscribe to question', question_subscriptions_path(@question), method: :delete,
+                    class: "unsubscribe_button#{' hide-button' unless @question.subscription(current_user)}", remote: true
+    - if can?(:create, Comment)
+    .add-comment-form
+      = render 'comments/form', resource: @question
 
-  - if can?(:update, @question)
-    =<> link_to 'Edit', '', class: 'edit-question-link'
-  - if can?(:destroy, @question)
-    =<> link_to 'Delete question', question_path(@question), method: :delete,
-              data: { confirm: 'Аre you sure?' }
-  =<> link_to 'Add comment', '', class: 'add-comment-link', data: {klass: 'Question', id: @question.id}
-  = render 'shared/vote', resource: @question
-  h3 Comments
-  .comments
-    = render @question.comments.order(:created_at)
+    - if can?(:update, @question)
+      =<> link_to 'Edit', '', class: 'edit-question-link'
+    - if can?(:destroy, @question)
+      =<> link_to 'Delete question', question_path(@question), method: :delete,
+                data: { confirm: 'Аre you sure?' }
+    =<> link_to 'Add comment', '', class: 'add-comment-link', data: {klass: 'Question', id: @question.id}
+    = render 'shared/vote', resource: @question
+    h3 Comments
+    .comments
+      = render @question.comments.order(:created_at)
 
-h2 Answers
-.answers
-  = render @question.answers
+  h2 Answers
+  .answers
+    = render @question.answers
 
-h2 New answer
-.answer-form
-  = render 'answers/form'
+  h2 New answer
+  .answer-form
+    = render 'answers/form'
